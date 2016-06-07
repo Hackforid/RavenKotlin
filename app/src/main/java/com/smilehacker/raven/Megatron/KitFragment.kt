@@ -1,17 +1,15 @@
 package com.smilehacker.raven.Megatron
 
+import android.content.Context
+import android.os.Bundle
 import android.support.v4.app.Fragment
 
 /**
  * Created by kleist on 16/6/6.
  */
-abstract class KitFragment : Fragment() {
+abstract class KitFragment : Fragment(), IFragmentAction {
 
     companion object {
-        // LaunchMode
-        val STANDARD = 0
-        val SINGLETOP = 1
-        val SINGLETASK = 2
 
         val RESULT_CANCELED = 0
         val RESULT_OK = 1
@@ -22,6 +20,12 @@ abstract class KitFragment : Fragment() {
         val STATE_SAVE_POP_EXIT = "state_save_pop_exit"
     }
 
+    private lateinit var mFragmentController : FragmentController
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mFragmentController = (context as HostActivity).getFragmentController()
+    }
 
 
     fun onShow() {
@@ -30,5 +34,17 @@ abstract class KitFragment : Fragment() {
 
     fun onHide() {
 
+    }
+
+    fun onNewBundle(bundle: Bundle?) {
+
+    }
+
+    override fun startFragment(to: KitFragment, launchMode: Int) {
+        mFragmentController.start(fragmentManager, null, to, launchMode)
+    }
+
+    override fun popFragment() {
+        mFragmentController.pop(fragmentManager)
     }
 }

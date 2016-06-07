@@ -5,11 +5,25 @@ import android.support.v7.app.AppCompatActivity
 /**
  * Created by kleist on 16/6/6.
  */
-abstract class HostActivity : AppCompatActivity() {
+abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
     abstract fun getContainerID() : Int
 
-    fun startFragment(to : KitFragment, launchMode : Int = KitFragment.STANDARD) {
+    val mFragmentController by lazy { FragmentController(this) }
 
+    override fun startFragment(to : KitFragment, launchMode : Int) {
+        mFragmentController.start(supportFragmentManager, null, to, launchMode)
+    }
+
+    override fun popFragment() {
+        mFragmentController.pop(supportFragmentManager)
+    }
+
+    fun getFragmentController() : FragmentController {
+        return mFragmentController
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }
