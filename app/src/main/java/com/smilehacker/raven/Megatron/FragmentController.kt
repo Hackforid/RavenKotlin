@@ -74,14 +74,17 @@ class FragmentController(val activity: HostActivity) {
         fragmentManager.popBackStackImmediate()
     }
 
-    private fun getTopFragment(fragmentManager: FragmentManager) : KitFragment? {
+    fun getTopFragment(fragmentManager: FragmentManager) : KitFragment? {
         val fragments = fragmentManager.fragments
-        if (fragments == null || fragments.size == 0) {
-            return null
+        if (fragments != null) {
+            for (i in (fragments.size - 1) downTo  0) {
+                val frg = fragments[i]
+                if (frg != null && frg is KitFragment) {
+                    return frg
+                }
+            }
         }
-        for (var i = 0; i >= 0; i++) {
-            
-        }
+        return null
     }
 
 }

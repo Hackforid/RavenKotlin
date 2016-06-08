@@ -24,6 +24,15 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        val topFrg = mFragmentController.getTopFragment(supportFragmentManager)
+        if (topFrg != null && topFrg.onBackPress()) {
+            return
+        }
+
+        if (supportFragmentManager.backStackEntryCount > 1) {
+            mFragmentController.pop(supportFragmentManager)
+        } else {
+            finish()
+        }
     }
 }

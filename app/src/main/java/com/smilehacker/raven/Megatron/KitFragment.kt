@@ -47,4 +47,13 @@ abstract class KitFragment : Fragment(), IFragmentAction {
     override fun popFragment() {
         mFragmentController.pop(fragmentManager)
     }
+
+    open fun onBackPress() : Boolean {
+        val top = mFragmentController.getTopFragment(childFragmentManager)
+        if (top != null) {
+            return top.onBackPress()
+        }
+        return false
+    }
+
 }
