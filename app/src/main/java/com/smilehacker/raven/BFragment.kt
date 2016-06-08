@@ -13,7 +13,7 @@ import org.jetbrains.anko.support.v4.toast
 /**
  * Created by kleist on 16/6/7.
  */
-class AFragment : KitFragment() {
+class BFragment : KitFragment() {
 
     private var mNum : Int = 0
 
@@ -26,18 +26,14 @@ class AFragment : KitFragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return UI {
             verticalLayout {
-                backgroundColor = Color.WHITE
+                //backgroundColor = Color.WHITE
                 padding = dip(30)
                 textView {
-                    text = "AFragment $mNum"
+                    text = "BFragment $mNum"
                 }
                 button {
-                    text = "nextA"
+                    text = "next"
                     onClick { showNext() }
-                }
-                button {
-                    text = "nextB"
-                    onClick { showNextB() }
                 }
             }
         }.view
@@ -47,20 +43,11 @@ class AFragment : KitFragment() {
     }
 
     private fun showNext() {
-        val frg = AFragment()
-        val bundle = Bundle()
-        bundle.putInt("num", mNum+1)
-        frg.arguments = bundle
-        //startFragmentForResult(frg, 1)
-        startFragment(frg)
-    }
-
-    private fun showNextB() {
         val frg = BFragment()
         val bundle = Bundle()
         bundle.putInt("num", mNum+1)
         frg.arguments = bundle
-        startFragmentWithFinish(frg)
+        startFragmentForResult(frg, 1)
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {

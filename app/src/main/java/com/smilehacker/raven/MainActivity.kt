@@ -1,7 +1,6 @@
 package com.smilehacker.raven
 
 import android.os.Bundle
-
 import com.smilehacker.raven.Megatron.HostActivity
 
 class MainActivity : HostActivity() {

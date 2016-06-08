@@ -18,9 +18,12 @@ abstract class KitFragment : Fragment(), IFragmentAction {
         val STATE_SAVE_EXIT = "state_save_exit"
         val STATE_SAVE_POP_ENTER = "state_save_pop_enter"
         val STATE_SAVE_POP_EXIT = "state_save_pop_exit"
+
     }
 
     private lateinit var mFragmentController : FragmentController
+
+    var fragmentResult: FragmentResult? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -44,6 +47,19 @@ abstract class KitFragment : Fragment(), IFragmentAction {
         mFragmentController.start(fragmentManager, null, to, launchMode)
     }
 
+    override fun startFragmentForResult(to: KitFragment, requestCode: Int, launchMode: Int) {
+        mFragmentController.start(fragmentManager,
+                mFragmentController.getTopFragment(fragmentManager), to,
+                FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
+                FragmentController.START_TYPE.ADD_WITH_RESULT, requestCode)
+    }
+
+    override fun startFragmentWithFinish(to: KitFragment, launchMode: Int) {
+        mFragmentController.start(fragmentManager, mFragmentController.getTopFragment(fragmentManager), to, launchMode,
+                FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
+                FragmentController.START_TYPE.ADD_AND_POP)
+    }
+
     override fun popFragment() {
         mFragmentController.pop(fragmentManager)
     }
@@ -54,6 +70,14 @@ abstract class KitFragment : Fragment(), IFragmentAction {
             return top.onBackPress()
         }
         return false
+    }
+
+    open fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
+
+    }
+
+    fun setResult(resultCode: Int, data: Bundle? = null) {
+        fragmentResult?.let { it.data = data; it.resultCode = resultCode }
     }
 
 }

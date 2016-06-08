@@ -12,7 +12,20 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
     val mFragmentController by lazy { FragmentController(this) }
 
     override fun startFragment(to : KitFragment, launchMode : Int) {
-        mFragmentController.start(supportFragmentManager, null, to, launchMode)
+        mFragmentController.start(supportFragmentManager, mFragmentController.getTopFragment(supportFragmentManager), to, launchMode)
+    }
+
+    override fun startFragmentForResult(to: KitFragment, requestCode: Int, launchMode: Int) {
+        mFragmentController.start(supportFragmentManager,
+                mFragmentController.getTopFragment(supportFragmentManager), to,
+                FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
+                FragmentController.START_TYPE.ADD_WITH_RESULT, requestCode)
+    }
+
+    override fun startFragmentWithFinish(to: KitFragment, launchMode: Int) {
+        mFragmentController.start(supportFragmentManager, mFragmentController.getTopFragment(supportFragmentManager), to, launchMode,
+                FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
+                FragmentController.START_TYPE.ADD_AND_POP)
     }
 
     override fun popFragment() {
