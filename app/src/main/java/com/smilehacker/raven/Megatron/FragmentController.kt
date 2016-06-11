@@ -47,10 +47,10 @@ class FragmentController(val activity: HostActivity) {
         if (from == null) {
             val bundle = to.arguments ?: Bundle()
             bundle.putBoolean(FRAGMENT.IS_ROOT, true)
-            ft.setCustomAnimations(R.anim.frg_slide_in_from_bottom, R.anim.frg_slide_out_from_bottom)
+            ft.setCustomAnimations(R.anim.frg_slide_in_from_bottom, R.anim.frg_slide_in_from_bottom)
             ft.add(activity.getContainerID(), to, toName)
         } else {
-            ft.setCustomAnimations(R.anim.frg_slide_in_from_bottom, R.anim.frg_slide_out_from_bottom)
+            ft.setCustomAnimations(R.anim.frg_slide_in_from_bottom, R.anim.frg_slide_in_from_bottom)
             ft.add(activity.getContainerID(), to, toName)
             ft.hide(from)
         }

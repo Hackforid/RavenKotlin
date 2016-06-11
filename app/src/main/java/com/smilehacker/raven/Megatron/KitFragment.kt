@@ -21,13 +21,14 @@ abstract class KitFragment : Fragment(), IFragmentAction {
 
     }
 
-    private lateinit var mFragmentController : FragmentController
+    private lateinit var mFragmentation : Fragmentation
+    private var mNewBundle : Bundle? = null
 
     var fragmentResult: FragmentResult? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        mFragmentController = (context as HostActivity).getFragmentController()
+        mFragmentation = (context as HostActivity).mFragmentation
     }
 
 
@@ -43,32 +44,18 @@ abstract class KitFragment : Fragment(), IFragmentAction {
 
     }
 
-    override fun startFragment(to: KitFragment, launchMode: Int) {
-        mFragmentController.start(fragmentManager, null, to, launchMode)
+    override fun startFragment(to: KitFragment, bundle: Bundle?, launchMode: Int) {
+        mFragmentation.start(fragmentManager, this, to, bundle, launchMode)
     }
 
     override fun startFragmentForResult(to: KitFragment, requestCode: Int, launchMode: Int) {
-        mFragmentController.start(fragmentManager,
-                mFragmentController.getTopFragment(fragmentManager), to,
-                FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
-                FragmentController.START_TYPE.ADD_WITH_RESULT, requestCode)
     }
 
-    override fun startFragmentWithFinish(to: KitFragment, launchMode: Int) {
-        mFragmentController.start(fragmentManager, mFragmentController.getTopFragment(fragmentManager), to, launchMode,
-                FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
-                FragmentController.START_TYPE.ADD_AND_POP)
-    }
 
     override fun popFragment() {
-        mFragmentController.pop(fragmentManager)
     }
 
     open fun onBackPress() : Boolean {
-        val top = mFragmentController.getTopFragment(childFragmentManager)
-        if (top != null) {
-            return top.onBackPress()
-        }
         return false
     }
 
@@ -78,6 +65,14 @@ abstract class KitFragment : Fragment(), IFragmentAction {
 
     fun setResult(resultCode: Int, data: Bundle? = null) {
         fragmentResult?.let { it.data = data; it.resultCode = resultCode }
+    }
+
+    fun setNewBundle(bundle: Bundle?) {
+        mNewBundle = bundle
+    }
+
+    fun getNewBundle() : Bundle? {
+        return mNewBundle
     }
 
 }

@@ -1,5 +1,6 @@
 package com.smilehacker.raven.Megatron
 
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
 /**
@@ -9,41 +10,29 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
     abstract fun getContainerID() : Int
 
-    val mFragmentController by lazy { FragmentController(this) }
+    val mFragmentation by lazy { Fragmentation(this) }
 
-    override fun startFragment(to : KitFragment, launchMode : Int) {
-        mFragmentController.start(supportFragmentManager, mFragmentController.getTopFragment(supportFragmentManager), to, launchMode)
+    override fun startFragment(to: KitFragment, bundle: Bundle?, launchMode: Int) {
+        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, bundle, launchMode, Fragmentation.START_TYPE.ADD)
     }
 
     override fun startFragmentForResult(to: KitFragment, requestCode: Int, launchMode: Int) {
-        mFragmentController.start(supportFragmentManager,
-                mFragmentController.getTopFragment(supportFragmentManager), to,
-                FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
-                FragmentController.START_TYPE.ADD_WITH_RESULT, requestCode)
-    }
-
-    override fun startFragmentWithFinish(to: KitFragment, launchMode: Int) {
-        mFragmentController.start(supportFragmentManager, mFragmentController.getTopFragment(supportFragmentManager), to, launchMode,
-                FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD,
-                FragmentController.START_TYPE.ADD_AND_POP)
+        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, bundle, launchMode, Fragmentation.START_TYPE.ADD)
     }
 
     override fun popFragment() {
-        mFragmentController.pop(supportFragmentManager)
+        onBackPressed()
     }
 
-    fun getFragmentController() : FragmentController {
-        return mFragmentController
-    }
 
     override fun onBackPressed() {
-        val topFrg = mFragmentController.getTopFragment(supportFragmentManager)
-        if (topFrg != null && topFrg.onBackPress()) {
+        val top = mFragmentation.getTopFragment()
+        if (top != null && top.onBackPress()) {
             return
         }
 
-        if (supportFragmentManager.backStackEntryCount > 1) {
-            mFragmentController.pop(supportFragmentManager)
+        if (mFragmentation.getStackCount() > 1) {
+            mFragmentation.back(supportFragmentManager)
         } else {
             finish()
         }
