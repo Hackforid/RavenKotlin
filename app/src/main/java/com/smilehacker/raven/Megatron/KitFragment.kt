@@ -24,6 +24,10 @@ abstract class KitFragment : Fragment(), IFragmentAction {
     private lateinit var mFragmentation : Fragmentation
     private var mNewBundle : Bundle? = null
 
+    var hostActivity : HostActivity? = null
+        get() = activity as HostActivity
+        private  set
+
     var fragmentResult: FragmentResult? = null
 
     override fun onAttach(context: Context?) {
@@ -31,28 +35,43 @@ abstract class KitFragment : Fragment(), IFragmentAction {
         mFragmentation = (context as HostActivity).mFragmentation
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            onVisible()
+        } else {
+            onInvisible()
+        }
+    }
 
-    fun onShow() {
+    open fun onVisible() {
 
     }
 
-    fun onHide() {
+    open fun onInvisible() {
 
     }
 
-    fun onNewBundle(bundle: Bundle?) {
+
+    open fun onNewBundle(bundle: Bundle?) {
 
     }
 
-    override fun startFragment(to: KitFragment, bundle: Bundle?, launchMode: Int) {
-        mFragmentation.start(fragmentManager, this, to, bundle, launchMode)
+    override fun startFragment(to: KitFragment, launchMode: Int) {
+        mFragmentation.start(fragmentManager, this, to, launchMode)
     }
 
     override fun startFragmentForResult(to: KitFragment, requestCode: Int, launchMode: Int) {
+        mFragmentation.start(fragmentManager, this, to, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
     }
 
 
     override fun popFragment() {
+        finish()
+    }
+
+    override fun popToFragment(fragment: KitFragment, includeSelf: Boolean) {
+        mFragmentation.popTo(fragmentManager, fragment, includeSelf)
     }
 
     open fun onBackPress() : Boolean {
@@ -61,6 +80,10 @@ abstract class KitFragment : Fragment(), IFragmentAction {
 
     open fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
 
+    }
+
+    fun finish() {
+        mFragmentation.finish(fragmentManager, this)
     }
 
     fun setResult(resultCode: Int, data: Bundle? = null) {
@@ -73,6 +96,10 @@ abstract class KitFragment : Fragment(), IFragmentAction {
 
     fun getNewBundle() : Bundle? {
         return mNewBundle
+    }
+
+    open fun getAnimation() : Pair<Int, Int>? {
+        return null
     }
 
 }

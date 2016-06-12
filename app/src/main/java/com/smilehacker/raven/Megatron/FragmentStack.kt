@@ -45,6 +45,25 @@ class FragmentStack {
         mFragmentStack.removeAt(mFragmentStack.lastIndex)
     }
 
+    fun popTo(fragment: KitFragment, includeSelf: Boolean = false) {
+        if (fragment !in mFragmentStack) {
+            return
+        }
+        if (includeSelf) {
+            if (mFragmentStack.indexOf(fragment) > 0) {
+                mFragmentStack.subList(0, mFragmentStack.indexOf(fragment)-1)
+            } else {
+                mFragmentStack.clear()
+            }
+        } else {
+            mFragmentStack.subList(0, mFragmentStack.indexOf(fragment))
+        }
+    }
+
+    fun remove(fragment: KitFragment) {
+        mFragmentStack.remove(fragment)
+    }
+
     fun getTopFragment() : KitFragment? {
         if (mFragmentStack.isEmpty()) {
             return null

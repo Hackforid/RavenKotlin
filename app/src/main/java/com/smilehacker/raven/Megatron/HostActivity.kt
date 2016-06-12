@@ -1,6 +1,5 @@
 package com.smilehacker.raven.Megatron
 
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
 /**
@@ -12,16 +11,20 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
     val mFragmentation by lazy { Fragmentation(this) }
 
-    override fun startFragment(to: KitFragment, bundle: Bundle?, launchMode: Int) {
-        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, bundle, launchMode, Fragmentation.START_TYPE.ADD)
+    override fun startFragment(to: KitFragment, launchMode: Int) {
+        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, launchMode, Fragmentation.START_TYPE.ADD)
     }
 
     override fun startFragmentForResult(to: KitFragment, requestCode: Int, launchMode: Int) {
-        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, bundle, launchMode, Fragmentation.START_TYPE.ADD)
+        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
     }
 
     override fun popFragment() {
         onBackPressed()
+    }
+
+    override fun popToFragment(fragment: KitFragment, includeSelf: Boolean) {
+        mFragmentation.popTo(supportFragmentManager, fragment, includeSelf)
     }
 
 
@@ -32,7 +35,7 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
         }
 
         if (mFragmentation.getStackCount() > 1) {
-            mFragmentation.back(supportFragmentManager)
+            mFragmentation.finish(supportFragmentManager, top!!)
         } else {
             finish()
         }

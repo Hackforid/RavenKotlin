@@ -1,21 +1,17 @@
 package com.smilehacker.raven.Megatron
 
 import android.support.v4.app.FragmentManager
+import com.smilehacker.raven.R
 
 /**
  * Created by zhouquan on 16/6/9.
  */
 class Fragmentation(val activity: HostActivity) {
 
-    object FRAGMENT {
-        const val IS_ROOT = "key_is_root"
-
-    }
 
     object START_TYPE {
         const val ADD = 1
         const val ADD_WITH_RESULT = 2
-        const val ADD_AND_POP = 3
     }
 
     object LAUNCH_MODE {
@@ -56,51 +52,88 @@ class Fragmentation(val activity: HostActivity) {
         val ft = fragmentManager.beginTransaction()
 
         if (from != null) {
-            ft
-                    .add(activity.getContainerID(), to, to.javaClass.name)
-                    .hide(from)
+            if (to.getAnimation() != null) {
+                ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
+            }
+            ft.add(activity.getContainerID(), to, to.javaClass.name)
+            if (from.getAnimation() != null) {
+                ft.setCustomAnimations(from.getAnimation()!!.first, from.getAnimation()!!.second)
+            }
+            ft.hide(from)
         } else {
-            ft
-                    .add(activity.getContainerID(), to, to.javaClass.name)
+            if (to.getAnimation() != null) {
+                ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
+            }
+            ft.add(activity.getContainerID(), to, to.javaClass.name)
         }
         ft.commit()
     }
 
-    fun back(fragmentManager: FragmentManager) {
-        val count = mFragmentStack.getStackCount()
-        if (count >= 2) {
-            val frg = mFragmentStack.getTopFragment()
-            val preFrg = mFragmentStack.getFragments()[count - 2]
-            if (frg!!.fragmentResult != null) {
-                preFrg.onFragmentResult(frg.fragmentResult!!.requestCode,
-                        frg.fragmentResult!!.resultCode, frg.fragmentResult!!.data)
-            }
-
-            mFragmentStack.pop()
-            val ft = fragmentManager.beginTransaction()
-            ft
-                    .remove(frg)
-                    .show(preFrg)
-            ft.commit()
-        }
-    }
 
     fun finish(fragmentManager: FragmentManager, fragment: KitFragment) {
         val fragments = mFragmentStack.getFragments()
-        if (fragment !in fragments) {
+        if (fragment !in fragments || fragments.size <= 1) {
             return
         }
-        if (fragments.size == 1) {
-            activity.finish()
+        val index = fragments.indexOf(fragment)
+        if (index == fragments.lastIndex) {
+            val preFrg = mFragmentStack.getFragments()[index - 1]
+            handleFragmentResult(fragment, preFrg)
+            fragmentManager.beginTransaction()
+                    .show(preFrg)
+                    .setCustomAnimations(0, R.anim.frg_slide_out_from_bottom)
+                .remove(fragment)
+                .commit()
+        } else {
+            if (index > 1) {
+                val preFrg = mFragmentStack.getFragments()[index - 1]
+                handleFragmentResult(fragment, preFrg)
+            }
+            fragmentManager.beginTransaction()
+                    .remove(fragment)
+                    .commit()
+        }
+        mFragmentStack.remove(fragment)
+    }
+
+    fun popTo(fragmentManager: FragmentManager, fragment: KitFragment, includeSelf: Boolean = false) {
+        val fragments = getFragments()
+        if (fragment !in mFragmentStack.getFragments()) {
+            return
         }
         val index = fragments.indexOf(fragment)
-        if (index > 1) {
-            val preFragment = fragments[index - 1]
-            if (fragment.fragmentResult != null) {
-                preFragment.onFragmentResult(fragment.fragmentResult!!.requestCode,
-                        fragment.fragmentResult!!.resultCode, fragment.fragmentResult!!.data)
+        if (index == fragments.lastIndex && includeSelf) {
+            finish(fragmentManager, fragment)
+        } else {
+            return
+        }
+
+        val top = fragments.last()
+        var target : KitFragment? = null
+        if (!includeSelf) {
+            target = fragment
+        } else {
+            if (index == 0) {
+                // 都空了pop你妹
+                return
+            } else {
+                target = fragments[index-1]
             }
         }
+        val ft = fragmentManager.beginTransaction()
+        for (i in (fragments.indexOf(target) + 1)..(fragments.indexOf(top))) {
+            ft.remove(fragments[i])
+        }
+        ft.show(target)
+        ft.commit()
+    }
+
+    private fun handleFragmentResult(frg: KitFragment, preFrg: KitFragment) {
+        if (frg.fragmentResult != null) {
+            preFrg.onFragmentResult(frg.fragmentResult!!.requestCode,
+                    frg.fragmentResult!!.resultCode, frg.fragmentResult!!.data)
+        }
+
     }
 
     fun getFragments(): MutableList<KitFragment> {

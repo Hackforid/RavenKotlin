@@ -36,6 +36,14 @@ class AFragment : KitFragment() {
                     onClick { showNext() }
                 }
                 button {
+                    text = "nextA with result"
+                    onClick { showNextAResult() }
+                }
+                button {
+                    text = "nextA with finish self"
+                    onClick { showNextAFinishSelf() }
+                }
+                button {
                     text = "nextB"
                     onClick { showNextB() }
                 }
@@ -51,20 +59,35 @@ class AFragment : KitFragment() {
         val bundle = Bundle()
         bundle.putInt("num", mNum+1)
         frg.arguments = bundle
-        //startFragmentForResult(frg, 1)
         startFragment(frg)
     }
 
+    private fun showNextAResult() {
+        val frg = AFragment()
+        val bundle = Bundle()
+        bundle.putInt("num", mNum+1)
+        frg.arguments = bundle
+        startFragmentForResult(frg, 123)
+    }
+
+    private fun showNextAFinishSelf() {
+        val frg = AFragment()
+        val bundle = Bundle()
+        bundle.putInt("num", mNum+1)
+        frg.arguments = bundle
+        startFragment(frg)
+        finish()
+    }
     private fun showNextB() {
         val frg = BFragment()
         val bundle = Bundle()
         bundle.putInt("num", mNum+1)
         frg.arguments = bundle
-        startFragmentWithFinish(frg)
+        //startFragmentWithFinish(frg)
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
         super.onFragmentResult(requestCode, resultCode, data)
-        toast("onResult")
+        toast("onResult reqCode=$requestCode")
     }
 }
