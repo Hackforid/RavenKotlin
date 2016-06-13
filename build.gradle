@@ -16,7 +16,10 @@ buildscript {
 
 allprojects {
     repositories {
+        maven{ url 'http://maven.oschina.net/content/groups/public/'}
         jcenter()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://jitpack.io" }
     }
 }
 

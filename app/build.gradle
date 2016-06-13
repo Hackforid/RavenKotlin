@@ -33,7 +33,13 @@ dependencies {
     // sdk19, sdk21, sdk23 are also available
     compile 'org.jetbrains.anko:anko-support-v4:0.8.3'
     compile 'org.jetbrains.anko:anko-appcompat-v7:0.8.3'
+
+    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
 }
 repositories {
+    maven{ url 'http://maven.oschina.net/content/groups/public/'}
+    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://jitpack.io" }
+    jcenter()
     mavenCentral()
 }
