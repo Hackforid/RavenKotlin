@@ -13,11 +13,16 @@ class AppInfo {
         const val TABLENAME = "app_info"
         const val PACKAGE_NAME = "package_name"
         const val ENABLE = "enable"
+        const val APP_NAME = "app_name"
     }
 
+    @Column(name = DB.APP_NAME)
+    var appName : String = ""
+
     @Column(name = DB.PACKAGE_NAME, index = true, unique = true)
-    var packageName : String? = null
+    var packageName : String = ""
 
     @Column(name = DB.ENABLE)
     var enable : Boolean = false
+
 }

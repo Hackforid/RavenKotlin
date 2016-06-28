@@ -1,0 +1,19 @@
+package com.smilehacker.raven.base
+
+import android.app.Application
+
+/**
+ * Created by kleist on 16/6/28.
+ */
+
+class App : Application() {
+
+    companion object {
+        lateinit  var inst : App
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        inst = this
+    }
+}

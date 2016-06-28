@@ -3,4 +3,40 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="black">#000</color>
+    <color name="white">#fff</color>
+    <color name="pressed_white">#7fffffff</color>
+    <color name="line">#dddddd</color>
+    <color name="alpha_black">#7f000000</color>
+
+    <!--text 文本-->
+    <!--一级文字 标题 正文-->
+    <color name="text_level1_color">#333333</color>
+    <!--二级文字 转发正文 描述-->
+    <color name="text_level2_color">#666666</color>
+    <!--三级文字 时间 来源-->
+    <color name="text_level3_color">#aaaaaa</color>
+    <!--四级文字 暗提示-->
+    <color name="text_level4_color">#dddddd</color>
+    <!--四级文字 暗提示-->
+    <color name="text_white_color">#ffffff</color>
+    <!--链接颜色-->
+    <color name="text_link_color">#00c0ff</color>
+    <!--特殊强调文字-->
+    <color name="text_highlight_color">#ff7700</color>
+    <!--彩色button上的文字-->
+    <color name="text_button_color">#ffffff</color>
+    <!--background-->
+    <color name="background_gray">#eeeeee</color>
+    <color name="background_white">#ffffff</color>
+
+    <color name="mgt_120">#cc3344</color>
+    <color name="mgt_100">#ff4055</color>
+    <color name="mgt_80">#ff6677</color>
+    <color name="mgt_40">#ffb2bb</color>
+
+    <color name="blu_100">#2384e8</color>
+    <color name="blu_80">#4f9de3</color>
 </resources>
