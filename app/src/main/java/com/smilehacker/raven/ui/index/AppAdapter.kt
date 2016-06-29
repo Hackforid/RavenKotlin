@@ -10,6 +10,7 @@ import android.widget.TextView
 import butterknife.bindView
 import com.smilehacker.raven.R
 import com.smilehacker.raven.model.AppInfo
+import rx.lang.kotlin.toSingletonObservable
 import java.util.*
 
 /**
@@ -29,6 +30,8 @@ class AppAdapter(val ctx : Context) : RecyclerView.Adapter<AppAdapter.ViewHolder
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val app = mApps[position]
         holder?.name?.text = app.appName
+        app.packageName.toSingletonObservable()
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder? {

@@ -1,6 +1,7 @@
 package com.smilehacker.raven.base
 
 import android.app.Application
+import com.activeandroid.ActiveAndroid
 
 /**
  * Created by kleist on 16/6/28.
@@ -15,5 +16,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         inst = this
+        ActiveAndroid.initialize(this)
     }
 }

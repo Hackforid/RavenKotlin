@@ -9,7 +9,8 @@ import com.smilehacker.raven.base.App
 class IndexPresenterImpl : IndexPresenter() {
 
     override fun loadApps() {
-        AppData(App.inst).loadAppsFromSys()
+        val apps = AppData(App.inst).loadAppsFromSys()
+        view?.showApps(apps)
     }
 
 }

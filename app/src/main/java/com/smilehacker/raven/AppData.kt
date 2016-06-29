@@ -2,6 +2,7 @@ package com.smilehacker.raven
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import com.smilehacker.raven.model.AppInfo
 import java.util.*
 
@@ -31,4 +32,15 @@ class AppData(val context: Context) {
 
     fun isLaunchable(packageName: String)
             =  packageManager.getLaunchIntentForPackage(packageName) != null
+
+    companion object {
+        fun getIcon(ctx: Context, packageName: String) : Drawable? {
+            val pm = ctx.packageManager
+            try {
+                return pm.getApplicationIcon(packageName)
+            } catch (e : PackageManager.NameNotFoundException) {
+                return null
+            }
+        }
+    }
 }

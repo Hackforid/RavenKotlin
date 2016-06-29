@@ -17,11 +17,10 @@ import com.smilehacker.raven.mvp.MVPFragment
 class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer {
 
     private val mRvApps by bindView<RecyclerView>(R.id.rv_apps)
-    private val mAppAdpater by lazy { AppAdapter(context) }
+    private val mAppAdapter by lazy { AppAdapter(context)}
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.frg_index, container, false)
-        initView()
         return view
     }
 
@@ -30,11 +29,19 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer {
     }
 
     override fun showApps(apps: MutableList<AppInfo>) {
+        mAppAdapter.setApps(apps)
     }
 
     private fun initView() {
         val layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-        mRvApps.adapter = mAppAdpater
         mRvApps.layoutManager = layoutManager
+        mRvApps.adapter = mAppAdapter
     }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        presenter.loadApps()
+    }
+
 }
