@@ -2,6 +2,7 @@ package com.smilehacker.raven.base
 
 import android.app.Application
 import com.activeandroid.ActiveAndroid
+import com.smilehacker.raven.voice.TTSManager
 
 /**
  * Created by kleist on 16/6/28.
@@ -17,5 +18,6 @@ class App : Application() {
         super.onCreate()
         inst = this
         ActiveAndroid.initialize(this)
+        TTSManager.init(this)
     }
 }

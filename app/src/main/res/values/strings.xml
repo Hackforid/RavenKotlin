@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RavenKotlin</string>
+
+    <string name="tag_key_icon">tag_key_icon</string>
 </resources>
