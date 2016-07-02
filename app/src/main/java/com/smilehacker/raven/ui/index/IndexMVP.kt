@@ -14,4 +14,5 @@ interface IndexViewer : Viewer {
 
 abstract class IndexPresenter : BasePresenter<IndexViewer>() {
     abstract fun loadApps()
+    abstract fun setAppTTSEnable(packageName: String, enable: Boolean)
 }

@@ -8,9 +8,14 @@ import com.smilehacker.raven.base.App
  */
 class IndexPresenterImpl : IndexPresenter() {
 
+    private val mAppData = AppData(App.inst)
+
     override fun loadApps() {
-        val apps = AppData(App.inst).loadAppsFromSys()
+        val apps = mAppData.loadApps()
         view?.showApps(apps)
     }
 
+    override fun setAppTTSEnable(packageName: String, enable: Boolean) {
+        mAppData.setAppTTSEnable(packageName, enable)
+    }
 }

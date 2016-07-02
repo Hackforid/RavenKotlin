@@ -56,7 +56,7 @@ class FragmentController(val activity: HostActivity) {
         }
 
         ft.addToBackStack(toName)
-        ft.commit()
+        ft.commitNow()
     }
 
     private fun handleLaunchMode(fragmentManager: FragmentManager, to: KitFragment, launchMode: Int) : Boolean {

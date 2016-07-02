@@ -1,5 +1,6 @@
 package com.smilehacker.raven.model
 
+import com.activeandroid.Model
 import com.activeandroid.annotation.Column
 import com.activeandroid.annotation.Table
 
@@ -7,7 +8,7 @@ import com.activeandroid.annotation.Table
  * Created by kleist on 16/6/13.
  */
 @Table(name = AppInfo.DB.TABLENAME)
-class AppInfo {
+class AppInfo : Model() {
 
     object DB {
         const val TABLENAME = "app_info"
