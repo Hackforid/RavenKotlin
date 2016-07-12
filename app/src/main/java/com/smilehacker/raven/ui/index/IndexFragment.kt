@@ -1,16 +1,14 @@
 package com.smilehacker.raven.ui.index
 
-import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SwitchCompat
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import butterknife.bindView
+import com.smilehacker.raven.ConfigManager
 import com.smilehacker.raven.R
 import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.mvp.MVPFragment
@@ -23,9 +21,14 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
     private val mRvApps by bindView<RecyclerView>(R.id.rv_apps)
     private val mToolbar by bindView<Toolbar>(R.id.toolbar)
+    private lateinit var mSwitch : SwitchCompat
 
     private val mAppAdapter by lazy { AppAdapter(context, this)}
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.frg_index, container, false)
         return view
@@ -79,23 +82,20 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
     private fun initToolbar() {
-        hostActivity.setSupportActionBar(mToolbar)
-
-        mToolbar.setOnMenuItemClickListener { item ->
-            val id = item.itemId
-            when (id) {
-                R.id.action_settings -> {
-                    val intent = Intent(this@MainActivity, SettingActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
-            }
-        }
-
-
-
+        hostActivity?.setSupportActionBar(mToolbar)
         mToolbar.title = "Raven"
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.main, menu)
+        val switchItem = menu?.findItem(R.id.action_switch_enable)
+        mSwitch = switchItem?.actionView as SwitchCompat
+        mSwitch.isChecked = ConfigManager.isEnable
+        mSwitch.setOnCheckedChangeListener { compoundButton, checked -> ConfigManager.isEnable = checked }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
