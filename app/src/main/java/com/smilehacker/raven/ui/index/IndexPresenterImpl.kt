@@ -1,6 +1,9 @@
 package com.smilehacker.raven.ui.index
 
+import android.content.Context
 import com.smilehacker.raven.AppData
+import com.smilehacker.raven.ConfigManager
+import com.smilehacker.raven.NotificationHelper
 import com.smilehacker.raven.base.App
 
 /**
@@ -17,5 +20,16 @@ class IndexPresenterImpl : IndexPresenter() {
 
     override fun setAppTTSEnable(packageName: String, enable: Boolean) {
         mAppData.setAppTTSEnable(packageName, enable)
+    }
+
+    override fun checkNotificationService(ctx: Context) {
+        val notiHelper = NotificationHelper(ctx)
+        if (!notiHelper.isNotificationServiceEnable()) {
+            if (ConfigManager.isFirstLaunch) {
+                view?.showSetNotificationDialog()
+            } else {
+                view?.showSetNotificationSnackbar()
+            }
+        }
     }
 }
