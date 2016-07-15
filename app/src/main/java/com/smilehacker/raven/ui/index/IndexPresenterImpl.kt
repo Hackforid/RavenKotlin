@@ -5,6 +5,9 @@ import com.smilehacker.raven.AppData
 import com.smilehacker.raven.ConfigManager
 import com.smilehacker.raven.NotificationHelper
 import com.smilehacker.raven.base.App
+import com.smilehacker.raven.util.Callback
+import com.smilehacker.raven.util.DLog
+import com.smilehacker.raven.voice.TTSManager
 
 /**
  * Created by kleist on 16/6/28.
@@ -30,6 +33,25 @@ class IndexPresenterImpl : IndexPresenter() {
             } else {
                 view?.showSetNotificationSnackbar()
             }
+        } else {
+            checkTTS()
         }
+    }
+
+    override fun checkTTS() {
+        TTSManager.checkTTS(object : Callback<Void> {
+            override fun onResult(result: Void?) {
+                DLog.d("check TTS success")
+            }
+
+            override fun onError(e: Exception) {
+                if (ConfigManager.isFirstLaunch) {
+                    view?.showSetTTSDialog(e.message.toString())
+                } else {
+                    view?.showSetTTSSnackbar(e.message.toString())
+                }
+            }
+
+        })
     }
 }

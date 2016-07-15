@@ -8,6 +8,7 @@ import android.speech.tts.UtteranceProgressListener
 import android.text.TextUtils
 import com.smilehacker.raven.AppData
 import com.smilehacker.raven.ConfigManager
+import com.smilehacker.raven.util.Callback
 import com.smilehacker.raven.util.DLog
 
 /**
@@ -91,4 +92,24 @@ object TTSManager {
             mTTS = null
         }
     }
+
+    fun checkTTS(callback: Callback<Void>) {
+        var tts : TextToSpeech? = null
+        tts = TextToSpeech(mContext,
+                TextToSpeech.OnInitListener {
+                    if (it == TextToSpeech.ERROR) {
+                        callback.onError(Exception("未设置TTS"))
+                    } else {
+                        val result = tts!!.isLanguageAvailable(mContext.resources.configuration.locale)
+                        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                            callback.onError(Exception("语言不支持"))
+                        } else {
+                            callback.onResult()
+                        }
+                    }
+                    tts!!.shutdown()
+                })
+    }
+
+
 }

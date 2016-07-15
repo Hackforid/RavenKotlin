@@ -13,10 +13,13 @@ interface IndexViewer : Viewer {
     fun showApps(apps : MutableList<AppInfo>)
     fun showSetNotificationDialog()
     fun showSetNotificationSnackbar()
+    fun showSetTTSDialog(msg: String)
+    fun showSetTTSSnackbar(msg: String)
 }
 
 abstract class IndexPresenter : BasePresenter<IndexViewer>() {
     abstract fun loadApps()
     abstract fun setAppTTSEnable(packageName: String, enable: Boolean)
     abstract fun checkNotificationService(ctx : Context)
+    abstract fun checkTTS()
 }

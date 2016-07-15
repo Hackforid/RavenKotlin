@@ -2,6 +2,7 @@ package com.smilehacker.raven.ui.index
 
 import android.content.Intent
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -33,6 +34,8 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     private val mAppAdapter by lazy { AppAdapter(context, this)}
 
     private val REQUEST_CODE_SET_NOTIFICATION_SERVICE = 1231
+    private val REQUEST_CODE_SET_TTS = 1232
+    private val REQUEST_CODE_SEARCH_TTS = 1233
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +128,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
         builder.setPositiveButton("设置通知服务",
                 { dialog, i -> gotoSetNotificationService(); dialog.dismiss() }
         )
-        builder.setNegativeButton("以后设置", {dialog, i -> showSetNotificationSnackbar(); dialog.dismiss()})
+        builder.setNegativeButton("以后设置", {dialog, i -> showSetNotificationSnackbar(); dialog.dismiss(); presenter.checkTTS()})
         builder.setCancelable(false)
         builder.create().show()
     }
@@ -146,12 +149,49 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
         }
     }
 
+    private fun gotoMarketSearchTTS() {
+        val viewIntent = Intent("android.intent.action.VIEW",
+                Uri.parse("market://search?q=TTS"))
+        startActivityForResult(viewIntent, REQUEST_CODE_SEARCH_TTS)
+    }
+
+    private fun gotoSetTTS() {
+        val intent = Intent()
+        intent.action = "com.android.settings.TTS_SETTINGS"
+        startActivityForResult(intent, REQUEST_CODE_SET_TTS)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_SET_NOTIFICATION_SERVICE) {
             presenter.checkNotificationService(context)
         }
+        when(resultCode) {
+            REQUEST_CODE_SET_NOTIFICATION_SERVICE -> presenter.checkNotificationService(context)
+            REQUEST_CODE_SET_TTS -> presenter.checkTTS()
+            REQUEST_CODE_SEARCH_TTS -> presenter.checkTTS()
+        }
     }
+
+    override fun showSetTTSDialog(msg: String) {
+        val builder = AlertDialog.Builder(activity)
+        builder.setTitle("TTS服务")
+        builder.setMessage("$msg,请手动设置.如果未安装文字转语音服务,您可以到各大市场搜索TTS来安装,推荐使用讯飞语音.")
+        builder.setPositiveButton("去设置",
+                { dialog, i -> gotoSetTTS(); dialog.dismiss() }
+        )
+        builder.setNeutralButton("去下载", {dialog, i -> gotoMarketSearchTTS(); showSetTTSSnackbar(msg); dialog.dismiss() })
+        builder.setNegativeButton("以后再说", {dialog, i -> showSetTTSSnackbar(msg); dialog.dismiss()})
+        builder.setCancelable(false)
+        builder.create().show()
+    }
+
+    override fun showSetTTSSnackbar(msg: String) {
+        val snackbar = Snackbar.make(mRoot, "文字转语音服务不可用,请手动设置", Snackbar.LENGTH_INDEFINITE)
+        snackbar.setAction("查看", {view -> showSetTTSDialog(msg); snackbar.dismiss()})
+        snackbar.show()
+    }
+
 
 
 }
