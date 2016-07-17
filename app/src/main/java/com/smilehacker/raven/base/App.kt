@@ -2,7 +2,8 @@ package com.smilehacker.raven.base
 
 import android.app.Application
 import com.activeandroid.ActiveAndroid
-import com.smilehacker.raven.ConfigManager
+import com.smilehacker.raven.kit.ConfigManager
+import com.smilehacker.raven.kit.NotificationHelper
 import com.smilehacker.raven.voice.TTSManager
 
 /**
@@ -21,5 +22,6 @@ class App : Application() {
         ActiveAndroid.initialize(this)
         TTSManager.init(this)
         ConfigManager.init(this)
+        NotificationHelper.init(this)
     }
 }

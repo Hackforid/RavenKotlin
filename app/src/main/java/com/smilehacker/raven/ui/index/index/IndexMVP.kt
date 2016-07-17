@@ -1,4 +1,4 @@
-package com.smilehacker.raven.ui.index
+package com.smilehacker.raven.ui.index.index
 
 import android.content.Context
 import com.smilehacker.raven.model.AppInfo

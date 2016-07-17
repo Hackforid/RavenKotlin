@@ -1,4 +1,4 @@
-package com.smilehacker.raven.ui.index
+package com.smilehacker.raven.ui.index.index
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -48,6 +48,14 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
         }
     }
 
+    private val mOnAppClickListener = View.OnClickListener {
+        view ->
+        val app = view.getTag(R.string.tag_key_app)
+        if (app != null) {
+            mAppCallback.onOpenAppConfig(app as AppInfo)
+        }
+    }
+
     fun setApps(apps: MutableList<AppInfo>) {
         mApps.clear()
         mApps.addAll(apps)
@@ -92,7 +100,8 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
         holder?.checkBox?.isChecked = app.enable
         holder?.checkBox?.setTag(R.string.tag_key_packagename, app.packageName)
         holder?.checkBox?.setOnClickListener(mOnAppCBClickListener)
-        //holder?.checkBox?.setOnCheckedChangeListener(mOnAppCheckboxChangeListener)
+        holder?.itemView?.setTag(R.string.tag_key_app, app)
+        holder?.itemView?.setOnClickListener(mOnAppClickListener)
     }
 
 
@@ -129,5 +138,6 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
 
     interface AppCallback {
         fun onAppEnableChange(packageName: String, enable: Boolean)
+        fun onOpenAppConfig(app: AppInfo)
     }
 }
