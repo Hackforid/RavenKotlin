@@ -7,7 +7,7 @@ import com.smilehacker.raven.base.BaseFragment
 /**
  * Created by kleist on 15/12/2.
  */
-abstract class MVPFragment<P : BasePresenter<V>, V : Viewer> : BaseFragment() {
+abstract class MVPFragment<out P : BasePresenter<V>, V : Viewer> : BaseFragment() {
     private val mPresenter : P by lazy { createPresenter() }
     val presenter = mPresenter
 

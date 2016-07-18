@@ -15,11 +15,13 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.LinearLayout
 import butterknife.bindView
-import com.smilehacker.raven.kit.ConfigManager
+import com.smilehacker.raven.Constants
 import com.smilehacker.raven.R
+import com.smilehacker.raven.kit.ConfigManager
 import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.mvp.MVPFragment
 import com.smilehacker.raven.ui.index.appconfig.AppConfigFragment
+import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.util.ViewUtils
 
 /**
@@ -195,7 +197,12 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
 
     override fun onOpenAppConfig(app: AppInfo) {
-        startFragment(AppConfigFragment())
+        val frg = AppConfigFragment()
+        val bundle = Bundle()
+        bundle.putString(Constants.KEY_PACKAGE_NAME, app.packageName)
+        DLog.i("set args")
+        frg.arguments = bundle
+        startFragment(frg)
     }
 
 }

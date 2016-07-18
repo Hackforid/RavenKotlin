@@ -11,8 +11,10 @@ object VoiceMaker {
 
     val voiceSymbols = arrayOf(
             VoiceSymbol(1, "[title]", "title", R.drawable.input_title),
-            VoiceSymbol(2, "[message]", "message", R.drawable.input_title),
-            VoiceSymbol(3, "[ticker]", "ticker", R.drawable.input_title),
-            VoiceSymbol(4, "[appname]", "appname", R.drawable.input_title)
+            VoiceSymbol(2, "[message]", "message", R.drawable.input_message),
+            VoiceSymbol(3, "[ticker]", "ticker", R.drawable.input_ticker),
+            VoiceSymbol(4, "[appname]", "appname", R.drawable.input_name)
     )
+
+    const val default_voice_format = "[appname]消息 [ticker]"
 }

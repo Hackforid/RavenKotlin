@@ -15,9 +15,10 @@ class AppInfo : Model() {
         const val PACKAGE_NAME = "package_name"
         const val ENABLE = "enable"
         const val APP_NAME = "app_name"
+        const val VOICE_FORMAT = "voice_format"
     }
 
-    @Column(name = DB.APP_NAME)
+    //@Column(name = DB.APP_NAME)
     var appName : String = ""
 
     @Column(name = DB.PACKAGE_NAME, index = true, unique = true)
@@ -25,5 +26,8 @@ class AppInfo : Model() {
 
     @Column(name = DB.ENABLE)
     var enable : Boolean = false
+
+    @Column(name = DB.VOICE_FORMAT)
+    var voiceFormat : String? = null
 
 }

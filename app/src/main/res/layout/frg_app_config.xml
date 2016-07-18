@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@color/white"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    </android.support.v7.widget.Toolbar>
+
+
     <EditText
         android:id="@+id/et_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="30dp"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:hint="text"
+        android:textSize="@dimen/common_textsize_t4"
+        android:textColor="@color/text_level1_color"
+        android:minHeight="40dp"
         />
 
     <LinearLayout
@@ -15,8 +31,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_below="@id/et_text"
         >
 
     </LinearLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingRight="@dimen/common_margin"
+        >
+        <TextView
+            android:id="@+id/btn_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/colorPrimary"
+            android:text="确定"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="#aaaaaa"
+            android:text="取消"
+            android:layout_toLeftOf="@id/btn_confirm"
+            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/btn_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="#aaaaaa"
+            android:text="默认"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+
+
+</RelativeLayout>

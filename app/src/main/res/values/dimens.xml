@@ -3,6 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="common_margin">16dp</dimen>
+
     <!-- 新规范字号 -->
     <dimen name="common_textsize_t0">10sp</dimen>
     <dimen name="common_textsize_t1">12sp</dimen>

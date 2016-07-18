@@ -1,10 +1,12 @@
 package com.smilehacker.raven.kit
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import com.activeandroid.query.Select
 import com.smilehacker.raven.model.AppInfo
+import com.smilehacker.raven.util.DLog
 import java.util.*
 
 /**
@@ -40,6 +42,35 @@ class AppData(val context: Context) {
                 it.enable = _app.enable
             }
         }
+    }
+
+    fun loadAppNameByPackage(packageName: String): String? {
+        var app: ApplicationInfo? = null
+        try {
+            app = packageManager.getApplicationInfo(packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            DLog.e(e)
+            return null
+        }
+        return packageManager.getApplicationLabel(app)?.toString() ?: null
+    }
+
+    fun getAppByPackage(packageName: String): AppInfo? {
+        val name = loadAppNameByPackage(packageName) ?: return null
+        var appInfo = getAppByPackageFromDB(packageName)
+        if (appInfo == null) {
+            appInfo = AppInfo()
+            appInfo.packageName = packageName
+        }
+
+        appInfo.appName = name
+        return appInfo
+    }
+
+    fun getAppByPackageFromDB(packageName: String): AppInfo? {
+        return Select().from(AppInfo::class.java)
+                .where("${AppInfo.DB.PACKAGE_NAME} = \"$packageName\"")
+                .executeSingle()
     }
 
     fun loadApps() : MutableList<AppInfo> {
@@ -79,5 +110,15 @@ class AppData(val context: Context) {
                 .where("${AppInfo.DB.PACKAGE_NAME} = \"$packageName\"")
                 .executeSingle()
         return app != null && app.enable
+    }
+
+    fun saveVoiceFormat(packageName: String, voiceFomat: String) {
+        var appInfo = getAppByPackageFromDB(packageName)
+        if (appInfo == null) {
+            appInfo = AppInfo()
+            appInfo.packageName = packageName
+        }
+        appInfo.voiceFormat = voiceFomat
+        appInfo.save()
     }
 }

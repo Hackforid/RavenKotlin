@@ -1,6 +1,7 @@
 package com.smilehacker.raven.ui.index.appconfig
 
 import android.os.Bundle
+import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -11,17 +12,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.TextView
 import butterknife.bindView
+import com.smilehacker.raven.Constants
 import com.smilehacker.raven.R
 import com.smilehacker.raven.kit.VoiceMaker
+import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.mvp.MVPFragment
 import com.smilehacker.raven.util.DLog
-import org.jetbrains.anko.bottomPadding
-import org.jetbrains.anko.imageView
-import org.jetbrains.anko.linearLayout
+import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.UI
 import org.jetbrains.anko.support.v4.dip
-import org.jetbrains.anko.textView
+import org.jetbrains.anko.support.v4.toast
 
 /**
  * Created by zhouquan on 16/7/17.
@@ -31,7 +33,35 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
 
     val mEtText by bindView<EditText>(R.id.et_text)
     val mVgSymbols by bindView<LinearLayout>(R.id.vg_symbols)
+    val mToolbar by bindView<Toolbar>(R.id.toolbar)
+    val mBtnConfirm by bindView<TextView>(R.id.btn_confirm)
+
     val mSymbols by lazy { presenter.getVoiceSymbols() }
+
+    lateinit var mAppInfo :AppInfo
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        DLog.i("onCreate")
+        if (arguments == null) {
+            DLog.e("argument is null")
+            finish()
+            return
+        }
+        val packageName = arguments.getString(Constants.KEY_PACKAGE_NAME)
+        if (packageName == null) {
+            DLog.e("packageName is null")
+            finish()
+            return
+        }
+        val appInfo = presenter.getAppInfo(packageName)
+        if (appInfo == null) {
+            toast("应用不存在")
+            finish()
+            return
+        }
+        mAppInfo = appInfo
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(R.layout.frg_app_config, container, false)
@@ -66,6 +96,29 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
             }
 
         })
+
+        if (mAppInfo.voiceFormat == null) {
+            mAppInfo.voiceFormat = VoiceMaker.default_voice_format
+        }
+        mEtText.setText(mAppInfo.voiceFormat)
+
+        mBtnConfirm.onClick {
+            val text = mEtText.text.toString()
+            presenter.saveVoiceFormat(mAppInfo.packageName, text)
+            finish()
+        }
+
+        initToolbar()
+    }
+
+    private fun initToolbar() {
+        hostActivity?.setSupportActionBar(mToolbar)
+        mToolbar.title = "${mAppInfo.appName} 消息定制"
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        mToolbar.setNavigationOnClickListener {
+            finish()
+        }
+        hostActivity?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     private fun insetImageSpan(symbol: VoiceMaker.VoiceSymbol) {
@@ -86,7 +139,6 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
     private val mOnSymbolClickListener = View.OnClickListener {
         view ->
             val symbol = view.getTag(R.string.tag_key_symbol)
-            DLog.d("onclik")
             if (symbol != null) {
                 insetImageSpan(symbol as VoiceMaker.VoiceSymbol)
             }
@@ -96,7 +148,7 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
         val drawable = resources.getDrawable(symbol.icon, context.theme)
         drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
         val spannable = SpannableString(symbol.symbol)
-        val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+        val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM)
         spannable.setSpan(imageSpan, 0, symbol.symbol.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         return spannable
     }
@@ -109,8 +161,8 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
             var pos = text.indexOf(it.symbol)
             while (pos >= 0) {
                 val drawable = resources.getDrawable(it.icon, context.theme)
-                drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-                val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
+                drawable.setBounds(0, 0, dip(50), dip(25))
+                val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM)
                 spannable.setSpan(imageSpan, pos, pos + it.symbol.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                 pos = text.indexOf(it.symbol, pos + 1)
             }
@@ -133,6 +185,9 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
                 orientation = LinearLayout.HORIZONTAL
                 imageView {
                     setImageResource(symbol.icon)
+                }.lparams {
+                    height = dip(25)
+                    width = dip(50)
                 }
                 textView {
                     text = symbol.text
