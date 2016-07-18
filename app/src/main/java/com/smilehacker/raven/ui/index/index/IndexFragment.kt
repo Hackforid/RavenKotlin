@@ -1,4 +1,4 @@
-package com.smilehacker.raven.ui.index
+package com.smilehacker.raven.ui.index.index
 
 import android.content.Intent
 import android.graphics.Rect
@@ -15,10 +15,11 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.LinearLayout
 import butterknife.bindView
-import com.smilehacker.raven.ConfigManager
+import com.smilehacker.raven.kit.ConfigManager
 import com.smilehacker.raven.R
 import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.mvp.MVPFragment
+import com.smilehacker.raven.ui.index.appconfig.AppConfigFragment
 import com.smilehacker.raven.util.ViewUtils
 
 /**
@@ -31,7 +32,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     private val mRoot by bindView<LinearLayout>(R.id.root)
     private lateinit var mSwitch : SwitchCompat
 
-    private val mAppAdapter by lazy { AppAdapter(context, this)}
+    private val mAppAdapter by lazy { AppAdapter(context, this) }
 
     private val REQUEST_CODE_SET_NOTIFICATION_SERVICE = 1231
     private val REQUEST_CODE_SET_TTS = 1232
@@ -193,5 +194,8 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
 
+    override fun onOpenAppConfig(app: AppInfo) {
+        startFragment(AppConfigFragment())
+    }
 
 }

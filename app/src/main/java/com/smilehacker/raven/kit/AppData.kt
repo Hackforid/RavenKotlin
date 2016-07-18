@@ -1,4 +1,4 @@
-package com.smilehacker.raven
+package com.smilehacker.raven.kit
 
 import android.content.Context
 import android.content.pm.PackageManager

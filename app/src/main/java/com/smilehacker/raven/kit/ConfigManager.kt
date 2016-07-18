@@ -1,4 +1,4 @@
-package com.smilehacker.raven
+package com.smilehacker.raven.kit
 
 import android.content.Context
 
@@ -25,7 +25,8 @@ object ConfigManager {
 
     var isEnable : Boolean
         get() = mPref.getBoolean(CONFIG_ENABLE, false)
-        set(value) {mPref.edit().putBoolean(CONFIG_ENABLE, value).commit()}
+        set(value) {
+            mPref.edit().putBoolean(CONFIG_ENABLE, value).commit()}
 
     private var _isFirstLaunch : Boolean
         get() = mPref.getBoolean(CONFIG_FIRST_LAUNCH, true)

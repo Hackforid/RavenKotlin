@@ -1,15 +1,17 @@
 package com.smilehacker.raven.voice
 
 import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Message
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.text.TextUtils
-import com.smilehacker.raven.AppData
-import com.smilehacker.raven.ConfigManager
+import com.smilehacker.raven.kit.AppData
+import com.smilehacker.raven.kit.ConfigManager
 import com.smilehacker.raven.util.Callback
 import com.smilehacker.raven.util.DLog
+import java.util.*
 
 /**
  * Created by kleist on 16/6/30.
@@ -59,7 +61,13 @@ object TTSManager {
                     TextToSpeech.OnInitListener {
                         DLog.d("tts it" + it)
                         if (it == TextToSpeech.SUCCESS) {
-                            mTTS!!.speak(text, TextToSpeech.QUEUE_ADD, null, text)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                mTTS!!.speak(text, TextToSpeech.QUEUE_ADD, null, text)
+                            } else {
+                                val map = HashMap<String, String>()
+                                map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, text)
+                                mTTS!!.speak(text, TextToSpeech.QUEUE_ADD, map)
+                            }
                         }
                     })
             mTTS!!.setOnUtteranceProgressListener(object : UtteranceProgressListener() {

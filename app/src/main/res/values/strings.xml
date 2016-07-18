@@ -6,6 +6,8 @@
 
     <string name="tag_key_icon">tag_key_icon</string>
     <string name="tag_key_packagename">tag_key_packagename</string>
+    <string name="tag_key_app">tag_key_app</string>
+    <string name="tag_key_symbol">tag_key_app</string>
 
     <string name="notification_description">Listen Notifications</string>
 </resources>

@@ -2,7 +2,7 @@ package com.smilehacker.raven
 
 import android.os.Bundle
 import com.smilehacker.raven.Megatron.HostActivity
-import com.smilehacker.raven.ui.index.IndexFragment
+import com.smilehacker.raven.ui.index.index.IndexFragment
 
 class MainActivity : HostActivity() {
 
