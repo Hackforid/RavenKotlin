@@ -4,6 +4,7 @@ import android.app.Notification
 import android.support.annotation.DrawableRes
 import com.smilehacker.raven.R
 import com.smilehacker.raven.base.App
+import com.smilehacker.raven.util.DLog
 
 /**
  * Created by zhouquan on 16/7/17.
@@ -18,10 +19,12 @@ object VoiceMaker {
             VoiceSymbol(4, "[appname]", "appname", R.drawable.input_name)
     )
 
-    const val default_voice_format = "[appname]消息 [ticker]"
+    const val default_voice_format = "[appname]消息 [title] [message]"
 
-    fun makeVoice(packageName: String, notification: Notification, voiceFormat: String) {
+    fun makeVoice(packageName: String, notification: Notification, voiceFormat: String): String {
         val notificationData = NotificationHelper.getNotificationData(notification)
+        var r = voiceFormat
+        DLog.i("r = $r data = $notificationData")
         voiceSymbols.forEach {
             val appName = AppData(App.inst.applicationContext).loadAppNameByPackage(packageName)
             val str = when (it.symbol) {
@@ -33,8 +36,8 @@ object VoiceMaker {
                     ""
                 }
             }
-
-            voiceFormat.replace(it.symbol, str?:"", false)
+            r = r.replace(it.symbol, str?:"", false)
         }
+        return r
     }
 }

@@ -7,9 +7,9 @@ import android.os.Handler
 import android.os.Message
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.text.TextUtils
 import com.smilehacker.raven.kit.AppData
 import com.smilehacker.raven.kit.ConfigManager
+import com.smilehacker.raven.kit.VoiceMaker
 import com.smilehacker.raven.util.Callback
 import com.smilehacker.raven.util.DLog
 import java.util.*
@@ -49,14 +49,16 @@ object TTSManager {
     }
 
     fun readText(packageName: String, notification: Notification) {
+        DLog.i("read text $packageName")
 
-        if (TextUtils.isEmpty(text)) {
+        val app = mAppData.getAppByPackage(packageName)
+        if (!ConfigManager.isEnable || app == null || !app.enable || "".equals(app.voiceFormat?.replace(" ", ""))) {
+            DLog.i("not valid")
             return
         }
+        val text = VoiceMaker.makeVoice(packageName, notification, app.voiceFormat ?: VoiceMaker.default_voice_format)
+        DLog.i("text=$text")
 
-        if (!ConfigManager.isEnable || !mAppData.isAppTTSEnable(packageName)) {
-            return
-        }
 
         if (mTTS == null) {
             mTTS = TextToSpeech(mContext,

@@ -4,7 +4,6 @@ import android.annotation.TargetApi
 import android.os.Build
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.voice.TTSManager
 
 /**
@@ -20,11 +19,7 @@ class NLService : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
         sbn?.apply {
-            if (notification.tickerText != null && !sbn.packageName.equals("com.github.shadowsocks")) {
-                DLog.d(notification.tickerText.toString())
-                DLog.d(sbn.packageName)
-                TTSManager.readText(sbn.packageName, notification)
-            }
+            TTSManager.readText(sbn.packageName, notification)
         }
     }
 
