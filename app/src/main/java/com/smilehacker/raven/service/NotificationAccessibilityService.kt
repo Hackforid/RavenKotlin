@@ -29,7 +29,7 @@ class NotificationAccessibilityService : AccessibilityService() {
         if (e.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
             val data = e.parcelableData
             if (data is Notification) {
-                TTSManager.readText(e.packageName.toString(), data.tickerText.toString())
+                TTSManager.readText(e.packageName.toString(), data)
             }
         }
     }

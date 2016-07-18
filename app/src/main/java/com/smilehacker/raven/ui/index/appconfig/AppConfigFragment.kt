@@ -35,6 +35,8 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
     val mVgSymbols by bindView<LinearLayout>(R.id.vg_symbols)
     val mToolbar by bindView<Toolbar>(R.id.toolbar)
     val mBtnConfirm by bindView<TextView>(R.id.btn_confirm)
+    val mBtnCancel by bindView<TextView>(R.id.btn_cancel)
+    val mBtnDefault by bindView<TextView>(R.id.btn_default)
 
     val mSymbols by lazy { presenter.getVoiceSymbols() }
 
@@ -106,6 +108,12 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
             val text = mEtText.text.toString()
             presenter.saveVoiceFormat(mAppInfo.packageName, text)
             finish()
+        }
+
+        mBtnCancel.onClick { finish() }
+        mBtnDefault.onClick {
+            mEtText.setText(VoiceMaker.default_voice_format)
+            mEtText.setSelection(VoiceMaker.default_voice_format.length)
         }
 
         initToolbar()

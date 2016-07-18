@@ -23,7 +23,7 @@ class NLService : NotificationListenerService() {
             if (notification.tickerText != null && !sbn.packageName.equals("com.github.shadowsocks")) {
                 DLog.d(notification.tickerText.toString())
                 DLog.d(sbn.packageName)
-                TTSManager.readText(sbn.packageName, notification.tickerText.toString())
+                TTSManager.readText(sbn.packageName, notification)
             }
         }
     }

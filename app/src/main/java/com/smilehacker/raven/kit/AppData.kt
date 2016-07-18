@@ -121,4 +121,13 @@ class AppData(val context: Context) {
         appInfo.voiceFormat = voiceFomat
         appInfo.save()
     }
+
+    fun getVoiceFormat(packageName: String): String {
+        val app = getAppByPackage(packageName)
+        if (app == null || app.voiceFormat == null) {
+            return VoiceMaker.default_voice_format
+        } else {
+            return app.voiceFormat!!
+        }
+    }
 }

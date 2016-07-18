@@ -1,7 +1,9 @@
 package com.smilehacker.raven.kit
 
+import android.app.Notification
 import android.support.annotation.DrawableRes
 import com.smilehacker.raven.R
+import com.smilehacker.raven.base.App
 
 /**
  * Created by zhouquan on 16/7/17.
@@ -17,4 +19,22 @@ object VoiceMaker {
     )
 
     const val default_voice_format = "[appname]消息 [ticker]"
+
+    fun makeVoice(packageName: String, notification: Notification, voiceFormat: String) {
+        val notificationData = NotificationHelper.getNotificationData(notification)
+        voiceSymbols.forEach {
+            val appName = AppData(App.inst.applicationContext).loadAppNameByPackage(packageName)
+            val str = when (it.symbol) {
+                "[title]" ->  notificationData.title
+                "[message]" -> notificationData.message
+                "[ticker]" -> notificationData.ticker
+                "[appname]" -> appName
+                else -> {
+                    ""
+                }
+            }
+
+            voiceFormat.replace(it.symbol, str?:"", false)
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.smilehacker.raven.voice
 
+import android.app.Notification
 import android.content.Context
 import android.os.Build
 import android.os.Handler
@@ -47,7 +48,8 @@ object TTSManager {
         mAppData = AppData(mContext)
     }
 
-    fun readText(packageName: String, text: String) {
+    fun readText(packageName: String, notification: Notification) {
+
         if (TextUtils.isEmpty(text)) {
             return
         }
