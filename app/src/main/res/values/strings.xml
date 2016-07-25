@@ -10,4 +10,14 @@
     <string name="tag_key_symbol">tag_key_app</string>
 
     <string name="notification_description">Listen Notifications</string>
+    
+    
+    <!-- preference -->
+    <string name="pref_silence_key">pref_silence</string>
+    <string name="pref_silence_title">开启静音时段</string>
+    <string name="pref_silence_summary">在静音时段不自动朗读</string>
+
+    <string name="pref_silence_time_key">pref_silence_time_key</string>
+    <string name="pref_silence_time_title">静音时间段设置</string>
+    <string name="pref_silence_time_summary">22:00 ~ 1:00</string>
 </resources>

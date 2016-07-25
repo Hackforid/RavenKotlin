@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="@string/pref_silence_key"
+        android:title="@string/pref_silence_title"
+        android:summary="@string/pref_silence_summary"
+        android:defaultValue="false" />
+    <Preference
+        android:key="@string/pref_silence_time_key"
+        android:dependency="@string/pref_silence_key"
+        android:summary="@string/pref_silence_time_summary"
+        android:title="@string/pref_silence_time_title"/>
+
+</PreferenceScreen>
