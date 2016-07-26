@@ -1,23 +1,24 @@
 package com.smilehacker.raven.Megatron
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import java.util.*
 
 /**
  * Created by zhouquan on 16/6/9.
  */
 class FragmentStack {
-    private val mFragmentStack : MutableList<KitFragment> = ArrayList()
+    private val mFragmentStack : MutableList<Fragment> = ArrayList()
 
     fun getFragments() = mFragmentStack
 
     fun getStackCount() = mFragmentStack.size
 
-    fun putStandard(fragment : KitFragment) {
+    fun putStandard(fragment : Fragment) {
         mFragmentStack.add(fragment)
     }
 
-    fun putSingleTop(fragment: KitFragment) : Boolean {
+    fun putSingleTop(fragment: Fragment) : Boolean {
         if (mFragmentStack.isEmpty() || mFragmentStack.last() != fragment) {
             mFragmentStack.add(fragment)
             return false
@@ -26,7 +27,7 @@ class FragmentStack {
         }
     }
 
-    fun putSingleTask(fragment: KitFragment, bundle: Bundle? = null) : Boolean {
+    fun putSingleTask(fragment: Fragment, bundle: Bundle? = null) : Boolean {
         if (mFragmentStack.isEmpty() || fragment !in mFragmentStack) {
             mFragmentStack.add(fragment)
             return false
@@ -45,7 +46,7 @@ class FragmentStack {
         mFragmentStack.removeAt(mFragmentStack.lastIndex)
     }
 
-    fun popTo(fragment: KitFragment, includeSelf: Boolean = false) {
+    fun popTo(fragment: Fragment, includeSelf: Boolean = false) {
         if (fragment !in mFragmentStack) {
             return
         }
@@ -60,11 +61,11 @@ class FragmentStack {
         }
     }
 
-    fun remove(fragment: KitFragment) {
+    fun remove(fragment: Fragment) {
         mFragmentStack.remove(fragment)
     }
 
-    fun getTopFragment() : KitFragment? {
+    fun getTopFragment() : Fragment? {
         if (mFragmentStack.isEmpty()) {
             return null
         } else {
