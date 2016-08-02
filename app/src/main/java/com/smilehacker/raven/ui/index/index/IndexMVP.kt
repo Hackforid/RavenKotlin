@@ -22,4 +22,5 @@ abstract class IndexPresenter : BasePresenter<IndexViewer>() {
     abstract fun setAppTTSEnable(packageName: String, enable: Boolean)
     abstract fun checkNotificationService(ctx : Context)
     abstract fun checkTTS()
+    abstract fun queryByName(name: String)
 }

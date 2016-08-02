@@ -2,10 +2,10 @@ package com.smilehacker.raven.ui.index.index
 
 import android.content.Context
 import com.smilehacker.raven.base.App
-import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.kit.AppData
 import com.smilehacker.raven.kit.ConfigManager
 import com.smilehacker.raven.kit.NotificationHelper
+import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.util.Callback
 import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.voice.TTSManager
@@ -18,6 +18,7 @@ class IndexPresenterImpl : IndexPresenter() {
 
     private val mAppData = AppData(App.Companion.inst)
 
+    // todo  add cache
     override fun loadApps() {
         val apps = mAppData.loadApps()
         sortApp(apps)
@@ -66,5 +67,12 @@ class IndexPresenterImpl : IndexPresenter() {
         apps.clear()
         apps.addAll(enabledApps.sortedWith(Comparator { t1, t2 -> t1.appName.compareTo(t2.appName)  }))
         apps.addAll(disabledApps.sortedWith(Comparator { t1, t2 -> t1.appName.compareTo(t2.appName)  }))
+    }
+
+    override fun queryByName(name: String) {
+        val apps = mAppData.loadApps()
+        sortApp(apps)
+        val queriedApps = apps.filter { it.appName.toLowerCase().contains(name.toLowerCase()) }
+        view?.showApps(queriedApps as MutableList<AppInfo>)
     }
 }

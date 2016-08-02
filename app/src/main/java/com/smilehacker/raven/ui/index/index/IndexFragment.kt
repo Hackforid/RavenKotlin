@@ -8,10 +8,8 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SwitchCompat
-import android.support.v7.widget.Toolbar
+import android.support.v7.widget.*
+import android.text.TextUtils
 import android.view.*
 import android.widget.LinearLayout
 import butterknife.bindView
@@ -33,6 +31,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     private val mRvApps by bindView<RecyclerView>(R.id.rv_apps)
     private val mToolbar by bindView<Toolbar>(R.id.toolbar)
     private val mRoot by bindView<LinearLayout>(R.id.root)
+    private lateinit var mSearchView : SearchView
     private lateinit var mSwitch : SwitchCompat
 
     private val mAppAdapter by lazy { AppAdapter(context, this) }
@@ -98,16 +97,36 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
     private fun initToolbar() {
-        hostActivity?.setSupportActionBar(mToolbar)
+        hostActivity.setSupportActionBar(mToolbar)
         mToolbar.title = "Raven"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.main, menu)
-        val switchItem = menu?.findItem(R.id.action_switch_enable)
+        val switchItem = menu!!.findItem(R.id.action_switch_enable)
         mSwitch = switchItem?.actionView as SwitchCompat
         mSwitch.isChecked = ConfigManager.isEnable
         mSwitch.setOnCheckedChangeListener { compoundButton, checked -> ConfigManager.isEnable = checked }
+
+        mSearchView = menu!!.findItem(R.id.action_search).actionView as SearchView
+        mSearchView.isSubmitButtonEnabled = false
+        mSearchView.setOnCloseListener { presenter.loadApps(); true }
+        mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                DLog.i(newText)
+                if (!TextUtils.isEmpty(newText)) {
+                    presenter.queryByName(newText!!)
+                } else {
+                    presenter.loadApps()
+                }
+                return true
+            }
+
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
