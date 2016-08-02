@@ -1,5 +1,6 @@
 package com.smilehacker.raven.Megatron
 
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 
 /**
@@ -11,11 +12,11 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
     val mFragmentation by lazy { Fragmentation(this) }
 
-    override fun startFragment(to: KitFragment, launchMode: Int) {
+    override fun startFragment(to: Fragment, launchMode: Int) {
         mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, launchMode, Fragmentation.START_TYPE.ADD)
     }
 
-    override fun startFragmentForResult(to: KitFragment, requestCode: Int, launchMode: Int) {
+    override fun startFragmentForResult(to: Fragment, requestCode: Int, launchMode: Int) {
         mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
     }
 
@@ -23,14 +24,17 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
         onBackPressed()
     }
 
-    override fun popToFragment(fragment: KitFragment, includeSelf: Boolean) {
+    override fun popToFragment(fragment: Fragment, includeSelf: Boolean) {
         mFragmentation.popTo(supportFragmentManager, fragment, includeSelf)
     }
 
 
     override fun onBackPressed() {
         val top = mFragmentation.getTopFragment()
-        if (top != null && top.onBackPress()) {
+        if (top == null || top !is IKitFragmentAction) {
+            return
+        }
+        if (top.onBackPress()) {
             return
         }
 

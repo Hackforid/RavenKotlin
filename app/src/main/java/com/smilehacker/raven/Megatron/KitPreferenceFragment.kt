@@ -2,12 +2,12 @@ package com.smilehacker.raven.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.preference.PreferenceFragmentCompat
 
 /**
- * Created by kleist on 16/6/6.
+ * Created by kleist on 16/8/2.
  */
-abstract class KitFragment : Fragment(), IKitFragmentAction {
-
+abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAction {
     val mFragmentActor by lazy { KitFragmentActor(this) }
 
     override var fragmentResult: FragmentResult? = mFragmentActor.fragmentResult
@@ -76,5 +76,4 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
 
     override fun onInvisible() {
     }
-
 }

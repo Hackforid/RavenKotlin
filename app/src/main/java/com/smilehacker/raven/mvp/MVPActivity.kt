@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
  * Created by kleist on 15/12/2.
  */
 
-abstract class MVPActivity<in P : Presenter<V>, in V : Viewer>: AppCompatActivity() {
+abstract class MVPActivity<out P : Presenter<V>, in V : Viewer>: AppCompatActivity() {
 
     private val mPresenter : P by lazy { createPresenter() }
     val presenter = mPresenter

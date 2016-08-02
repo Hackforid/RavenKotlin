@@ -1,5 +1,6 @@
 package com.smilehacker.raven.Megatron
 
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.smilehacker.raven.R
 
@@ -22,10 +23,14 @@ class Fragmentation(val activity: HostActivity) {
 
     private val mFragmentStack: FragmentStack by lazy { FragmentStack() }
 
-    fun start(fragmentManager: FragmentManager, from: KitFragment?, to: KitFragment,
+    fun start(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
               launchMode: Int = LAUNCH_MODE.STANDARD,
               startType: Int = START_TYPE.ADD,
               requestCode: Int = 0) {
+
+        if (to !is IKitFragmentAction) {
+            throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
+        }
 
         when (launchMode) {
             LAUNCH_MODE.STANDARD -> {
@@ -52,6 +57,9 @@ class Fragmentation(val activity: HostActivity) {
         val ft = fragmentManager.beginTransaction()
 
         if (from != null) {
+            if (from !is IKitFragmentAction) {
+                throw IllegalArgumentException("from fragment should implement IKitFragmentAction")
+            }
             if (to.getAnimation() != null) {
                 ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
             }
@@ -70,7 +78,7 @@ class Fragmentation(val activity: HostActivity) {
     }
 
 
-    fun finish(fragmentManager: FragmentManager, fragment: KitFragment) {
+    fun finish(fragmentManager: FragmentManager, fragment: Fragment) {
         val fragments = mFragmentStack.getFragments()
         if (fragment !in fragments || fragments.size <= 1) {
             return
@@ -96,7 +104,7 @@ class Fragmentation(val activity: HostActivity) {
         mFragmentStack.remove(fragment)
     }
 
-    fun popTo(fragmentManager: FragmentManager, fragment: KitFragment, includeSelf: Boolean = false) {
+    fun popTo(fragmentManager: FragmentManager, fragment: Fragment, includeSelf: Boolean = false) {
         val fragments = getFragments()
         if (fragment !in mFragmentStack.getFragments()) {
             return
@@ -109,7 +117,7 @@ class Fragmentation(val activity: HostActivity) {
         }
 
         val top = fragments.last()
-        var target : KitFragment? = null
+        var target : Fragment? = null
         if (!includeSelf) {
             target = fragment
         } else {
@@ -128,15 +136,17 @@ class Fragmentation(val activity: HostActivity) {
         ft.commit()
     }
 
-    private fun handleFragmentResult(frg: KitFragment, preFrg: KitFragment) {
-        if (frg.fragmentResult != null) {
-            preFrg.onFragmentResult(frg.fragmentResult!!.requestCode,
-                    frg.fragmentResult!!.resultCode, frg.fragmentResult!!.data)
+    private fun handleFragmentResult(frg: Fragment, preFrg: Fragment) {
+        if (frg is IKitFragmentAction && preFrg is IKitFragmentAction) {
+            if (frg.fragmentResult != null) {
+                preFrg.onFragmentResult(frg.fragmentResult!!.requestCode,
+                        frg.fragmentResult!!.resultCode, frg.fragmentResult!!.data)
+            }
         }
 
     }
 
-    fun getFragments(): MutableList<KitFragment> {
+    fun getFragments(): MutableList<Fragment> {
         return mFragmentStack.getFragments()
     }
 
@@ -144,7 +154,7 @@ class Fragmentation(val activity: HostActivity) {
         return mFragmentStack.getStackCount()
     }
 
-    fun getTopFragment(): KitFragment? {
+    fun getTopFragment(): Fragment? {
         return mFragmentStack.getTopFragment()
     }
 
