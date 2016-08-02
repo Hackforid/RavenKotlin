@@ -12,6 +12,8 @@ object ConfigManager {
 
     const val CONFIG_FIRST_LAUNCH = "config_first_launch";
 
+    const val CONFIG_SILENCE_TIME = "config_silence_time"
+
 
     private lateinit var mContext : Context;
 
@@ -44,5 +46,13 @@ object ConfigManager {
         }
         private set
 
+    var silenceTime :  IntArray
+        get() = mPref.getString(CONFIG_SILENCE_TIME, "23-00-09-00").split("-").map { Integer.parseInt(it) }.toIntArray()
+        set(value) {
+            if (value.size != 4) {
+                throw IllegalArgumentException("must be 4 int")
+            }
+            mPref.edit().putString(CONFIG_SILENCE_TIME, value.joinToString("-")).commit()
+        }
 
 }

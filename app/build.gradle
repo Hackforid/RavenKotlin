@@ -27,11 +27,11 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    ext.android_support_version = "24.0.0"
+    ext.android_support_version = "24.1.1"
     compile "com.android.support:appcompat-v7:$android_support_version"
     compile "com.android.support:design:$android_support_version"
     compile "com.android.support:support-v4:$android_support_version"
-    compile "com.android.support:preference-v7:$android_support_version"
+    compile "com.android.support:preference-v14:$android_support_version"
     compile "com.android.support:recyclerview-v7:$android_support_version"
     compile "com.android.support:cardview-v7:$android_support_version"
     compile "com.android.support:percent:$android_support_version"

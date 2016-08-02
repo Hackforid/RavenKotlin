@@ -21,6 +21,7 @@ import com.smilehacker.raven.kit.ConfigManager
 import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.mvp.MVPFragment
 import com.smilehacker.raven.ui.index.appconfig.AppConfigFragment
+import com.smilehacker.raven.ui.index.preference.ConfigFragment
 import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.util.ViewUtils
 
@@ -110,6 +111,12 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.action_settings -> {
+                startFragment(ConfigFragment())
+                return true
+            }
+        }
         return super.onOptionsItemSelected(item)
     }
 
