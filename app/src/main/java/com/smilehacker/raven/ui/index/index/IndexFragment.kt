@@ -92,6 +92,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
             }
         })
 
+
         initToolbar()
     }
 
