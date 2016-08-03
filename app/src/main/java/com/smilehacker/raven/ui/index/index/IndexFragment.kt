@@ -226,4 +226,8 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
         startFragment(frg)
     }
 
+    override fun onBackPress(): Boolean {
+        mSearchView.onActionViewCollapsed()
+        return super.onBackPress()
+    }
 }
