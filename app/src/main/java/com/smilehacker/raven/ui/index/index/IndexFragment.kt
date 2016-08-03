@@ -9,7 +9,6 @@ import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
-import android.text.TextUtils
 import android.view.*
 import android.widget.LinearLayout
 import butterknife.bindView
@@ -110,19 +109,15 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
         mSearchView = menu!!.findItem(R.id.action_search).actionView as SearchView
         mSearchView.isSubmitButtonEnabled = false
-        mSearchView.setOnCloseListener { presenter.loadApps(); true }
+        mSearchView.setOnCloseListener {
+            presenter.queryByName(null); true }
         mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                DLog.i(newText)
-                if (!TextUtils.isEmpty(newText)) {
-                    presenter.queryByName(newText!!)
-                } else {
-                    presenter.loadApps()
-                }
+                presenter.queryByName(newText)
                 return true
             }
 

@@ -1,6 +1,7 @@
 package com.smilehacker.raven.ui.index.index
 
 import android.content.Context
+import android.text.TextUtils
 import com.smilehacker.raven.base.App
 import com.smilehacker.raven.kit.AppData
 import com.smilehacker.raven.kit.ConfigManager
@@ -17,12 +18,15 @@ import java.util.*
 class IndexPresenterImpl : IndexPresenter() {
 
     private val mAppData = AppData(App.Companion.inst)
+    private val mAppInfos by lazy { ArrayList<AppInfo>() }
 
-    // todo  add cache
     override fun loadApps() {
-        val apps = mAppData.loadApps()
-        sortApp(apps)
-        view?.showApps(apps)
+        mAppData.loadAppAsync {
+            mAppInfos.clear()
+            mAppInfos.addAll(it)
+            sortApp(mAppInfos)
+            view?.showApps(mAppInfos)
+        }
     }
 
     override fun setAppTTSEnable(packageName: String, enable: Boolean) {
@@ -69,10 +73,12 @@ class IndexPresenterImpl : IndexPresenter() {
         apps.addAll(disabledApps.sortedWith(Comparator { t1, t2 -> t1.appName.compareTo(t2.appName)  }))
     }
 
-    override fun queryByName(name: String) {
-        val apps = mAppData.loadApps()
-        sortApp(apps)
-        val queriedApps = apps.filter { it.appName.toLowerCase().contains(name.toLowerCase()) }
+    override fun queryByName(name: String?) {
+        if (TextUtils.isEmpty(name)) {
+            view?.showApps(mAppInfos)
+            return
+        }
+        val queriedApps = mAppInfos.filter { it.appName.toLowerCase().contains(name!!.toLowerCase()) }
         view?.showApps(queriedApps as MutableList<AppInfo>)
     }
 }

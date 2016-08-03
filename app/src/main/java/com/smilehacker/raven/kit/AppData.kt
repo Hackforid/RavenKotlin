@@ -7,6 +7,9 @@ import android.graphics.drawable.Drawable
 import com.activeandroid.query.Select
 import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.util.DLog
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.util.*
 
 /**
@@ -77,6 +80,15 @@ class AppData(val context: Context) {
         val apps = loadAppsFromSys()
         mergeAppTTSEnable(apps)
         return apps
+    }
+
+    fun loadAppAsync(action: ((MutableList<AppInfo>) -> Unit)) {
+        Observable.just(loadAppsFromSys())
+                .map {
+                    mergeAppTTSEnable(it); it }
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action)
     }
 
     fun isLaunchable(packageName: String)
