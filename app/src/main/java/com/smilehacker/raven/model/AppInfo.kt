@@ -30,4 +30,5 @@ class AppInfo : Model() {
     @Column(name = DB.VOICE_FORMAT)
     var voiceFormat : String? = null
 
+    var sortName: String = ""
 }
