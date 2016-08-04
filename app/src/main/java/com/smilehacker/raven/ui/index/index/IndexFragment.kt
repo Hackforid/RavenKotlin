@@ -30,8 +30,9 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     private val mRvApps by bindView<RecyclerView>(R.id.rv_apps)
     private val mToolbar by bindView<Toolbar>(R.id.toolbar)
     private val mRoot by bindView<LinearLayout>(R.id.root)
+    private val mSwitch by bindView<SwitchCompat>(R.id.v_switch)
+
     private lateinit var mSearchView : SearchView
-    private lateinit var mSwitch : SwitchCompat
 
     private val mAppAdapter by lazy { AppAdapter(context, this) }
 
@@ -92,6 +93,8 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
             }
         })
 
+        mSwitch.isChecked = ConfigManager.isEnable
+        mSwitch.setOnCheckedChangeListener { compoundButton, checked -> ConfigManager.isEnable = checked }
 
         initToolbar()
     }
@@ -103,10 +106,6 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.main, menu)
-        val switchItem = menu!!.findItem(R.id.action_switch_enable)
-        mSwitch = switchItem?.actionView as SwitchCompat
-        mSwitch.isChecked = ConfigManager.isEnable
-        mSwitch.setOnCheckedChangeListener { compoundButton, checked -> ConfigManager.isEnable = checked }
 
         mSearchView = menu!!.findItem(R.id.action_search).actionView as SearchView
         mSearchView.isSubmitButtonEnabled = false

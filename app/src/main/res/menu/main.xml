@@ -13,10 +13,4 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         />
-    <item
-        android:id="@+id/action_switch_enable"
-        android:title="启动"
-        app:showAsAction="ifRoom"
-        app:actionViewClass="android.support.v7.widget.SwitchCompat"
-        />
 </menu>
