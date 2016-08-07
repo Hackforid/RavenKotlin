@@ -42,7 +42,7 @@ class IndexSideBar : View {
 
     var selectIndex : Char = IndexChar[0].first()
         set(value) {
-            if (value != field && !mIsPressed) {
+            if (value != field ) {
                 invalidate()
             }
             field = value
@@ -137,7 +137,6 @@ class IndexSideBar : View {
         var pos = (y / height).toInt()
         pos = if (pos >= IndexChar.size) IndexChar.size - 1 else pos
         pos = if (pos < 0) 0 else pos
-        selectIndex = IndexChar[pos].first()
         if (mCurrentPos != pos) {
             mCurrentPos = pos
             mListener?.onSelect(pos, IndexChar[pos])

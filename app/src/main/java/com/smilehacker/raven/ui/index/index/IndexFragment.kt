@@ -108,7 +108,8 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
                 val pos = mAppAdapter.getPositionByFirstLetter(index.first())
                 DLog.i("index $index pos = $pos")
                 if (pos != -1) {
-                    mRvApps.smoothScrollToPosition(pos)
+                    //mRvApps.smoothScrollToPosition(pos)
+                    mRvApps.scrollToPosition(pos)
                 }
             }
 
