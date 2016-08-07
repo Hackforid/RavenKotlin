@@ -10,7 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
 import android.view.*
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import butterknife.bindView
 import com.smilehacker.raven.Constants
 import com.smilehacker.raven.R
@@ -21,6 +21,7 @@ import com.smilehacker.raven.ui.index.appconfig.AppConfigFragment
 import com.smilehacker.raven.ui.index.preference.ConfigFragment
 import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.util.ViewUtils
+import com.smilehacker.raven.widget.IndexSideBar
 
 /**
  * Created by kleist on 16/6/28.
@@ -29,8 +30,9 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
     private val mRvApps by bindView<RecyclerView>(R.id.rv_apps)
     private val mToolbar by bindView<Toolbar>(R.id.toolbar)
-    private val mRoot by bindView<LinearLayout>(R.id.root)
+    private val mRoot by bindView<RelativeLayout>(R.id.root)
     private val mSwitch by bindView<SwitchCompat>(R.id.v_switch)
+    private val mIndexSider by bindView<IndexSideBar>(R.id.indexsider)
 
     private lateinit var mSearchView : SearchView
 
@@ -91,6 +93,31 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
                 }
 
             }
+        })
+
+        mRvApps.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                DLog.i("scroll le = " + mAppAdapter.getAppByPos(layoutManager.findFirstVisibleItemPosition()).sortName.first())
+                mIndexSider.selectIndex = mAppAdapter.getAppByPos(layoutManager.findFirstVisibleItemPosition()).sortName.first().toLowerCase()
+            }
+        })
+
+        mIndexSider.setOnIndexListener(object : IndexSideBar.OnIndexListener {
+            override fun onSelect(pos: Int, index: String) {
+                val pos = mAppAdapter.getPositionByFirstLetter(index.first())
+                DLog.i("index $index pos = $pos")
+                if (pos != -1) {
+                    mRvApps.smoothScrollToPosition(pos)
+                }
+            }
+
+            override fun onTouchDown() {
+            }
+
+            override fun onTouchUp() {
+            }
+
         })
 
         mSwitch.isChecked = ConfigManager.isEnable
@@ -158,7 +185,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
     override fun showSetNotificationSnackbar() {
-        val snackbar = Snackbar.make(mRoot, "Raven需要您开启通知服务以正常运行,请手动开启.", Snackbar.LENGTH_INDEFINITE)
+        val snackbar = Snackbar.make(mRvApps, "Raven需要您开启通知服务以正常运行,请手动开启.", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("设置", {view -> gotoSetNotificationService(); snackbar.dismiss()})
         snackbar.show()
     }

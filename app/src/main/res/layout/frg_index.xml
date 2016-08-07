@@ -35,16 +35,22 @@
 
     </RelativeLayout>
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_apps"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/vg_bottom"
+        android:paddingRight="5dp"
         >
     </android.support.v7.widget.RecyclerView>
 
-
-
+    <com.smilehacker.raven.widget.IndexSideBar
+        android:id="@+id/indexsider"
+        android:layout_width="15dp"
+        android:layout_height="match_parent"
+        android:layout_above="@id/vg_bottom"
+        android:layout_below="@id/toolbar"
+        android:layout_alignParentRight="true"
+        />
 </RelativeLayout>
