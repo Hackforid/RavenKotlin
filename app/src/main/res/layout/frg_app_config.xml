@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:background="@color/white"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -8,23 +9,38 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#2853e8"
+        app:titleTextColor="@color/white"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        android:paddingLeft="0dp"
         >
     </android.support.v7.widget.Toolbar>
 
-
-    <EditText
-        android:id="@+id/et_text"
+    <RelativeLayout
+        android:id="@+id/vg_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="@dimen/common_margin"
-        android:layout_marginRight="@dimen/common_margin"
-        android:hint="text"
-        android:textSize="@dimen/common_textsize_t4"
-        android:textColor="@color/text_level1_color"
-        android:minHeight="40dp"
-        />
+        android:background="#2853e8"
+        >
+        <EditText
+            android:id="@+id/et_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="text"
+            android:textSize="@dimen/common_textsize_t4"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:minHeight="40dp"
+            android:gravity="center"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            />
+    </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/vg_symbols"
@@ -34,7 +50,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginRight="@dimen/common_margin"
-        android:layout_below="@id/et_text"
+        android:layout_below="@id/vg_text"
         >
 
     </LinearLayout>
@@ -78,6 +94,14 @@
             android:layout_centerVertical="true"
             />
     </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:backgroundTint="#2853e8"
+        />
 
 
 </RelativeLayout>
