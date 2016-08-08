@@ -21,15 +21,6 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
         }
     }
 
-    // should call
-    fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        if (isVisibleToUser) {
-            (fragment as IKitFragmentAction).onVisible()
-        } else {
-            (fragment as IKitFragmentAction).onInvisible()
-        }
-    }
-
     override fun startFragment(to: Fragment, launchMode: Int) {
         mFragmentation.start(fragment.fragmentManager, fragment, to, launchMode)
     }

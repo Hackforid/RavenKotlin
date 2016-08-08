@@ -51,6 +51,12 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
         return view
     }
 
+    override fun onVisible() {
+        super.onVisible()
+        DLog.i("onVisible")
+        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+    }
+
     override fun createPresenter(): IndexPresenter {
         return IndexPresenterImpl()
     }
