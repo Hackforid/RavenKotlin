@@ -2,6 +2,7 @@ package com.smilehacker.raven.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.View
 
 /**
  * Created by kleist on 16/6/6.
@@ -16,12 +17,19 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         get() = mFragmentActor.hostActivity
 
 
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        mFragmentActor.setUserVisibleHint(isVisibleToUser)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            onInvisible()
+        } else {
+            onVisible()
+        }
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        onVisible()
+    }
 
     override fun startFragment(to: Fragment, launchMode: Int) {
         mFragmentActor.startFragment(to, launchMode)

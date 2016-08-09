@@ -62,6 +62,10 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
         notifyDataSetChanged()
     }
 
+    fun getAppByPos(pos : Int) : AppInfo {
+        return mApps[pos]
+    }
+
     private fun setAppUIChecked(packageName: String, checked: Boolean) {
         val app = mApps.find { it.packageName.equals(packageName) }
         if (app != null) {
@@ -120,6 +124,15 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
 
     override fun getItemCount(): Int {
         return mApps.size
+    }
+
+    public fun getPositionByFirstLetter(letter: Char) : Int {
+        for (app in mApps) {
+            if (app.sortName.first().toLowerCase() == letter.toLowerCase() && !app.enable) {
+                return mApps.indexOf(app)
+            }
+        }
+        return -1
     }
 
 

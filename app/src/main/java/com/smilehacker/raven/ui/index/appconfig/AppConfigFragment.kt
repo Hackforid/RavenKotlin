@@ -1,5 +1,6 @@
 package com.smilehacker.raven.ui.index.appconfig
 
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.text.Editable
@@ -10,6 +11,7 @@ import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -63,11 +65,19 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
             return
         }
         mAppInfo = appInfo
+
     }
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(R.layout.frg_app_config, container, false)
         return view
+    }
+
+    override fun onVisible() {
+        super.onVisible()
+        DLog.i("onVisible")
+        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -99,6 +109,8 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
 
         })
 
+        mEtText.background.mutate().setColorFilter(resources.getColor(R.color.white), PorterDuff.Mode.SRC_ATOP)
+
         if (mAppInfo.voiceFormat == null) {
             mAppInfo.voiceFormat = VoiceMaker.default_voice_format
         }
@@ -120,13 +132,13 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
     }
 
     private fun initToolbar() {
-        hostActivity?.setSupportActionBar(mToolbar)
+        hostActivity.setSupportActionBar(mToolbar)
         mToolbar.title = "${mAppInfo.appName} 消息定制"
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         mToolbar.setNavigationOnClickListener {
             finish()
         }
-        hostActivity?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        hostActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     private fun insetImageSpan(symbol: VoiceMaker.VoiceSymbol) {

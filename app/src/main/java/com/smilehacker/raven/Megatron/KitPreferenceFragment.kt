@@ -3,6 +3,7 @@ package com.smilehacker.raven.Megatron
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceFragmentCompat
+import android.view.View
 
 /**
  * Created by kleist on 16/8/2.
@@ -16,10 +17,18 @@ abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAc
         get() = mFragmentActor.hostActivity
 
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            onInvisible()
+        } else {
+            onVisible()
+        }
+    }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        mFragmentActor.setUserVisibleHint(isVisibleToUser)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        onVisible()
     }
 
 
