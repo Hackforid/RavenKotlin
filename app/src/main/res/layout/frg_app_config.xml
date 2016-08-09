@@ -28,79 +28,75 @@
             android:id="@+id/et_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="text"
-            android:textSize="@dimen/common_textsize_t4"
+            android:hint="请输入语音格式"
+            android:textSize="@dimen/common_textsize_t5"
             android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/text_level3_color"
             android:minHeight="40dp"
             android:gravity="center"
             android:layout_marginTop="50dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="20dp"
+            android:textCursorDrawable="@null"
             />
     </RelativeLayout>
 
-
     <LinearLayout
-        android:id="@+id/vg_symbols"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="@dimen/common_margin"
-        android:layout_marginRight="@dimen/common_margin"
+        android:orientation="horizontal"
         android:layout_below="@id/vg_text"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
         >
+        <ImageView
+            android:id="@+id/tag_name"
+            android:layout_width="75dp"
+            android:layout_height="36dp"
+            android:src="@drawable/inputtag_name"
+            />
+        <ImageView
+            android:id="@+id/tag_title"
+            android:layout_width="75dp"
+            android:layout_height="36dp"
+            android:src="@drawable/inputtag_title"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            />
+        <ImageView
+            android:id="@+id/tag_msg"
+            android:layout_width="75dp"
+            android:layout_height="36dp"
+            android:src="@drawable/inputtag_message"
+            />
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:paddingLeft="@dimen/common_margin"
-        android:paddingRight="@dimen/common_margin"
-        >
-        <TextView
-            android:id="@+id/btn_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textColor="@color/colorPrimary"
-            android:text="确定"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            />
-        <TextView
-            android:id="@+id/btn_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textColor="#aaaaaa"
-            android:text="取消"
-            android:layout_toLeftOf="@id/btn_confirm"
-            android:layout_marginRight="20dp"
-            android:layout_centerVertical="true"
-            />
 
-        <TextView
-            android:id="@+id/btn_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textColor="#aaaaaa"
-            android:text="默认"
-            android:layout_centerVertical="true"
-            />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/btn_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="#aaaaaa"
+        android:text="默认"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="18dp"
+        android:layout_marginBottom="24dp"
+        />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         app:backgroundTint="#2853e8"
+        android:src="@drawable/ic_done_white_24dp"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:layout_margin="18dp"
         />
 
 

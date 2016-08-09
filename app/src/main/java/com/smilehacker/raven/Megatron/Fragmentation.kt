@@ -2,7 +2,6 @@ package com.smilehacker.raven.Megatron
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.smilehacker.raven.R
 
 /**
  * Created by zhouquan on 16/6/9.
@@ -87,11 +86,13 @@ class Fragmentation(val activity: HostActivity) {
         if (index == fragments.lastIndex) {
             val preFrg = mFragmentStack.getFragments()[index - 1]
             handleFragmentResult(fragment, preFrg)
-            fragmentManager.beginTransaction()
-                    .show(preFrg)
-                    .setCustomAnimations(0, R.anim.frg_slide_out_from_bottom)
-                .remove(fragment)
-                .commit()
+            val ft = fragmentManager.beginTransaction()
+            ft.show(preFrg)
+            if (fragment is IKitFragmentAction && fragment.getAnimation() != null) {
+                ft.setCustomAnimations(fragment.getAnimation()!!.first, fragment.getAnimation()!!.second)
+            }
+            ft.remove(fragment)
+            ft.commit()
         } else {
             if (index > 1) {
                 val preFrg = mFragmentStack.getFragments()[index - 1]

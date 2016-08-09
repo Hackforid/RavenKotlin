@@ -3,6 +3,7 @@ package com.smilehacker.raven.Megatron
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
+import com.smilehacker.raven.R
 
 /**
  * Created by kleist on 16/6/6.
@@ -76,7 +77,8 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
     }
 
     override fun getAnimation(): Pair<Int, Int>? {
-        return null
+        val anim = Pair(R.anim.default_frg_in, R.anim.default_frg_out)
+        return anim
     }
 
     override fun onVisible() {
