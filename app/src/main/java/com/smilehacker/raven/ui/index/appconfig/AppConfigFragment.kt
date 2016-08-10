@@ -2,6 +2,7 @@ package com.smilehacker.raven.ui.index.appconfig
 
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.Spannable
@@ -13,7 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.ImageView
 import android.widget.TextView
 import butterknife.bindView
 import com.smilehacker.raven.Constants
@@ -22,8 +23,7 @@ import com.smilehacker.raven.kit.VoiceMaker
 import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.mvp.MVPFragment
 import com.smilehacker.raven.util.DLog
-import org.jetbrains.anko.*
-import org.jetbrains.anko.support.v4.UI
+import org.jetbrains.anko.onClick
 import org.jetbrains.anko.support.v4.dip
 import org.jetbrains.anko.support.v4.toast
 
@@ -34,11 +34,12 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
 
 
     val mEtText by bindView<EditText>(R.id.et_text)
-    val mVgSymbols by bindView<LinearLayout>(R.id.vg_symbols)
     val mToolbar by bindView<Toolbar>(R.id.toolbar)
-    val mBtnConfirm by bindView<TextView>(R.id.btn_confirm)
-    val mBtnCancel by bindView<TextView>(R.id.btn_cancel)
     val mBtnDefault by bindView<TextView>(R.id.btn_default)
+    val mBtnConfirm by bindView<FloatingActionButton>(R.id.btn_confirm)
+    val mTagName by bindView<ImageView>(R.id.tag_name)
+    val mTagTitle by bindView<ImageView>(R.id.tag_title)
+    val mTagMsg by bindView<ImageView>(R.id.tag_msg)
 
     val mSymbols by lazy { presenter.getVoiceSymbols() }
 
@@ -86,12 +87,13 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
     }
 
     private fun initUI() {
-        mSymbols.forEach {
-            val view = getSymbolView(it)
-            mVgSymbols.addView(view)
-            view.setTag(R.string.tag_key_symbol, it)
-            view.setOnClickListener(mOnSymbolClickListener)
-        }
+        mTagTitle.setOnClickListener(mOnSymbolClickListener)
+        mTagTitle.setTag(R.string.tag_key_symbol, mSymbols[0])
+        mTagName.setOnClickListener(mOnSymbolClickListener)
+        mTagName.setTag(R.string.tag_key_symbol, mSymbols[3])
+        mTagMsg.setOnClickListener(mOnSymbolClickListener)
+        mTagMsg.setTag(R.string.tag_key_symbol, mSymbols[1])
+
         mEtText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
@@ -122,7 +124,6 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
             finish()
         }
 
-        mBtnCancel.onClick { finish() }
         mBtnDefault.onClick {
             mEtText.setText(VoiceMaker.default_voice_format)
             mEtText.setSelection(VoiceMaker.default_voice_format.length)
@@ -198,24 +199,5 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
         mEtText.setText(text)
     }
 
-    private fun getSymbolView(symbol: VoiceMaker.VoiceSymbol): View {
-        val view = UI {
-            linearLayout {
-                bottomPadding = dip(12)
-                orientation = LinearLayout.HORIZONTAL
-                imageView {
-                    setImageResource(symbol.icon)
-                }.lparams {
-                    height = dip(25)
-                    width = dip(50)
-                }
-                textView {
-                    text = symbol.text
-                }
-            }
-        }.view
-
-        return view
-    }
 
 }
