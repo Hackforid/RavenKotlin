@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
 import com.smilehacker.raven.R
+import com.smilehacker.raven.util.DLog
 
 /**
  * Created by kleist on 16/6/6.
@@ -17,6 +18,15 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
     override val hostActivity: HostActivity
         get() = mFragmentActor.hostActivity
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+        DLog.i("===stack===" + hostActivity.mFragmentation.hashCode())
+        hostActivity.mFragmentation.getFragments().forEach {
+            DLog.i(it.javaClass.name)
+        }
+    }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)

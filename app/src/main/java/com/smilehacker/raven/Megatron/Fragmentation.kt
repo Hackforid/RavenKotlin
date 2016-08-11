@@ -2,11 +2,13 @@ package com.smilehacker.raven.Megatron
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import com.smilehacker.raven.util.DLog
+import java.io.Serializable
 
 /**
  * Created by zhouquan on 16/6/9.
  */
-class Fragmentation(val activity: HostActivity) {
+class Fragmentation(var activity: HostActivity) : Serializable {
 
 
     object START_TYPE {
@@ -18,6 +20,10 @@ class Fragmentation(val activity: HostActivity) {
         const val SINGLE_TOP = 1
         const val SINGLE_TASK = 2
         const val STANDARD = 3
+    }
+
+    init {
+        DLog.i("create fragmentation")
     }
 
     private val mFragmentStack: FragmentStack by lazy { FragmentStack() }

@@ -2,12 +2,13 @@ package com.smilehacker.raven.Megatron
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import java.io.Serializable
 import java.util.*
 
 /**
  * Created by zhouquan on 16/6/9.
  */
-class FragmentStack {
+class FragmentStack : Serializable {
     private val mFragmentStack : MutableList<Fragment> = ArrayList()
 
     fun getFragments() = mFragmentStack

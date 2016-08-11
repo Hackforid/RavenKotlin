@@ -1,5 +1,6 @@
 package com.smilehacker.raven.ui.index.index
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
@@ -44,11 +45,34 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DLog.i("")
         setHasOptionsMenu(true)
+
     }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        DLog.i("")
         val view = inflater?.inflate(R.layout.frg_index, container, false)
         return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        DLog.i("")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        DLog.i("")
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        DLog.i("")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        DLog.i("")
     }
 
     override fun onVisible() {

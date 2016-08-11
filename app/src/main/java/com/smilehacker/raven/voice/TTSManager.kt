@@ -11,7 +11,6 @@ import com.smilehacker.raven.kit.AppData
 import com.smilehacker.raven.kit.ConfigManager
 import com.smilehacker.raven.kit.VoiceMaker
 import com.smilehacker.raven.util.Callback
-import com.smilehacker.raven.util.DLog
 import java.util.*
 
 /**
@@ -49,21 +48,17 @@ object TTSManager {
     }
 
     fun readText(packageName: String, notification: Notification) {
-        DLog.i("read text $packageName")
 
         val app = mAppData.getAppByPackage(packageName)
         if (!ConfigManager.isEnable || app == null || !app.enable || "".equals(app.voiceFormat?.replace(" ", ""))) {
-            DLog.i("not valid")
             return
         }
         val text = VoiceMaker.makeVoice(packageName, notification, app.voiceFormat ?: VoiceMaker.default_voice_format)
-        DLog.i("text=$text")
 
 
         if (mTTS == null) {
             mTTS = TextToSpeech(mContext,
                     TextToSpeech.OnInitListener {
-                        DLog.d("tts it" + it)
                         if (it == TextToSpeech.SUCCESS) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                 mTTS!!.speak(text, TextToSpeech.QUEUE_ADD, null, text)
@@ -98,7 +93,6 @@ object TTSManager {
     }
 
     fun releaseTTS() {
-        DLog.d("release tts")
         if (mTTS != null) {
             mTTS!!.shutdown()
             mTTS = null

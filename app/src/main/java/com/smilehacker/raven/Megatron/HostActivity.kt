@@ -1,5 +1,6 @@
 package com.smilehacker.raven.Megatron
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 
@@ -8,9 +9,23 @@ import android.support.v7.app.AppCompatActivity
  */
 abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
+    companion object {
+        const val KEY_FRAGMENTATION = "key_fragmentation"
+    }
+
     abstract fun getContainerID() : Int
 
-    val mFragmentation by lazy { Fragmentation(this) }
+    lateinit var mFragmentation : Fragmentation
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            mFragmentation = savedInstanceState.getSerializable(KEY_FRAGMENTATION) as Fragmentation
+            mFragmentation.activity = this
+        } else {
+            mFragmentation = Fragmentation(this)
+        }
+        super.onCreate(savedInstanceState)
+    }
 
     override fun startFragment(to: Fragment, launchMode: Int) {
         mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, launchMode, Fragmentation.START_TYPE.ADD)
@@ -43,5 +58,10 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
         } else {
             finish()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putSerializable(KEY_FRAGMENTATION, mFragmentation)
     }
 }

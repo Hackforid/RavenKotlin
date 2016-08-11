@@ -9,7 +9,9 @@ class MainActivity : HostActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_main)
-        init()
+        if (savedInstanceState == null) {
+            init()
+        }
     }
 
     override fun getContainerID(): Int {
