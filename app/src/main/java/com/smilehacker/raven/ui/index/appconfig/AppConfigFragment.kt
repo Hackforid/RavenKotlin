@@ -40,6 +40,7 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
     val mTagName by bindView<ImageView>(R.id.tag_name)
     val mTagTitle by bindView<ImageView>(R.id.tag_title)
     val mTagMsg by bindView<ImageView>(R.id.tag_msg)
+    val mTvAppName by bindView<TextView>(R.id.tv_app_name)
 
     val mSymbols by lazy { presenter.getVoiceSymbols() }
 
@@ -129,12 +130,15 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
             mEtText.setSelection(VoiceMaker.default_voice_format.length)
         }
 
+        mTvAppName.text = "${mAppInfo.appName}消息语音定制"
+
         initToolbar()
     }
 
     private fun initToolbar() {
         hostActivity.setSupportActionBar(mToolbar)
-        mToolbar.title = "${mAppInfo.appName} 消息定制"
+        //mToolbar.title = "${mAppInfo.appName} 消息定制"
+        mToolbar.title = ""
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
         mToolbar.setNavigationOnClickListener {
             finish()

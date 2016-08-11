@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:background="@color/white"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:background="#2196F3"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+    >
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2853e8"
         app:titleTextColor="@color/white"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
@@ -17,72 +18,96 @@
         >
     </android.support.v7.widget.Toolbar>
 
-    <RelativeLayout
-        android:id="@+id/vg_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:background="#2853e8"
-        >
-        <EditText
-            android:id="@+id/et_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="请输入语音格式"
-            android:textSize="@dimen/common_textsize_t5"
-            android:textColor="@color/white"
-            android:textColorHint="@color/text_level3_color"
-            android:minHeight="40dp"
-            android:gravity="center"
-            android:layout_marginTop="50dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
-            android:textCursorDrawable="@null"
-            />
-    </RelativeLayout>
+    <View
+        android:id="@+id/center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/vg_text"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_above="@id/center"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
         >
-        <ImageView
-            android:id="@+id/tag_name"
-            android:layout_width="75dp"
-            android:layout_height="36dp"
-            android:src="@drawable/inputtag_name"
-            />
-        <ImageView
-            android:id="@+id/tag_title"
-            android:layout_width="75dp"
-            android:layout_height="36dp"
-            android:src="@drawable/inputtag_title"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            />
-        <ImageView
-            android:id="@+id/tag_msg"
-            android:layout_width="75dp"
-            android:layout_height="36dp"
-            android:src="@drawable/inputtag_message"
-            />
+        <RelativeLayout
+            android:id="@+id/vg_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <EditText
+                android:id="@+id/et_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入语音格式"
+                android:textSize="@dimen/common_textsize_t5"
+                android:textColor="@color/white"
+                android:textColorHint="@color/text_level3_color"
+                android:minHeight="40dp"
+                android:gravity="left"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:textCursorDrawable="@null"
+                />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/vg_text"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="37dp"
+            >
+            <ImageView
+                android:id="@+id/tag_name"
+                android:layout_width="50dp"
+                android:layout_height="24dp"
+                android:src="@drawable/inputtag_name_s"
+                />
+            <ImageView
+                android:id="@+id/tag_title"
+                android:layout_width="50dp"
+                android:layout_height="24dp"
+                android:src="@drawable/inputtag_title_s"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+            <ImageView
+                android:id="@+id/tag_msg"
+                android:layout_width="50dp"
+                android:layout_height="24dp"
+                android:src="@drawable/inputtag_message_s"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="微信消息语音定制"
+        android:textColor="@color/white"
+        android:textSize="@dimen/common_textsize_t2"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="120dp"
+        />
 
     <TextView
         android:id="@+id/btn_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="22sp"
-        android:textColor="#aaaaaa"
+        android:textColor="@color/white"
         android:text="默认"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="18dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginBottom="24dp"
         />
 
@@ -92,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        app:backgroundTint="#2853e8"
+        app:backgroundTint="#FFA726"
         android:src="@drawable/ic_done_white_24dp"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
