@@ -4,11 +4,12 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.smilehacker.raven.util.DLog
 import java.io.Serializable
+import java.util.*
 
 /**
  * Created by zhouquan on 16/6/9.
  */
-class Fragmentation(var activity: HostActivity) : Serializable {
+class Fragmentation() : Serializable {
 
 
     object START_TYPE {
@@ -26,7 +27,15 @@ class Fragmentation(var activity: HostActivity) : Serializable {
         DLog.i("create fragmentation")
     }
 
+
     private val mFragmentStack: FragmentStack by lazy { FragmentStack() }
+
+    private var mContainerID: Int = 0
+
+    fun init(activity: HostActivity) {
+        mContainerID = activity.getContainerID()
+    }
+
 
     fun start(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
               launchMode: Int = LAUNCH_MODE.STANDARD,
@@ -37,17 +46,30 @@ class Fragmentation(var activity: HostActivity) : Serializable {
             throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
         }
 
+        var fragmentTag : String? = to.tag
+        DLog.i("frag tag = " + fragmentTag)
+
         when (launchMode) {
             LAUNCH_MODE.STANDARD -> {
-                mFragmentStack.putStandard(to)
+                if (!fragmentTag.isNullOrEmpty()) {
+                    throw IllegalArgumentException("new fragment should not has tag")
+                }
+                fragmentTag = mFragmentStack.getNewFragmentName(to)
+                mFragmentStack.putStandard(fragmentTag)
             }
             LAUNCH_MODE.SINGLE_TOP -> {
-                if (mFragmentStack.putSingleTop(to)) {
+                if (fragmentTag.isNullOrEmpty()) {
+                    fragmentTag = mFragmentStack.getNewFragmentName(to)
+                }
+                if (mFragmentStack.putSingleTop(fragmentTag!!)) {
                     to.onNewBundle(to.getNewBundle())
                 }
             }
             LAUNCH_MODE.SINGLE_TASK -> {
-                if (mFragmentStack.putSingleTask(to)) {
+                if (fragmentTag.isNullOrEmpty()) {
+                    fragmentTag = mFragmentStack.getNewFragmentName(to)
+                }
+                if (mFragmentStack.putSingleTask(fragmentTag!!)) {
                     to.onNewBundle(to.getNewBundle())
                 }
             }
@@ -68,7 +90,7 @@ class Fragmentation(var activity: HostActivity) : Serializable {
             if (to.getAnimation() != null) {
                 ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
             }
-            ft.add(activity.getContainerID(), to, to.javaClass.name)
+            ft.add(mContainerID, to, fragmentTag)
             if (from.getAnimation() != null) {
                 ft.setCustomAnimations(from.getAnimation()!!.first, from.getAnimation()!!.second)
             }
@@ -77,20 +99,20 @@ class Fragmentation(var activity: HostActivity) : Serializable {
             if (to.getAnimation() != null) {
                 ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
             }
-            ft.add(activity.getContainerID(), to, to.javaClass.name)
+            ft.add(mContainerID, to, fragmentTag)
         }
         ft.commit()
     }
 
 
     fun finish(fragmentManager: FragmentManager, fragment: Fragment) {
-        val fragments = mFragmentStack.getFragments()
+        val fragments = getFragments(fragmentManager)
         if (fragment !in fragments || fragments.size <= 1) {
             return
         }
         val index = fragments.indexOf(fragment)
         if (index == fragments.lastIndex) {
-            val preFrg = mFragmentStack.getFragments()[index - 1]
+            val preFrg = fragments[index - 1]
             handleFragmentResult(fragment, preFrg)
             val ft = fragmentManager.beginTransaction()
             ft.show(preFrg)
@@ -101,19 +123,19 @@ class Fragmentation(var activity: HostActivity) : Serializable {
             ft.commit()
         } else {
             if (index > 1) {
-                val preFrg = mFragmentStack.getFragments()[index - 1]
+                val preFrg = fragments[index - 1]
                 handleFragmentResult(fragment, preFrg)
             }
             fragmentManager.beginTransaction()
                     .remove(fragment)
                     .commit()
         }
-        mFragmentStack.remove(fragment)
+        mFragmentStack.remove(fragment.tag)
     }
 
     fun popTo(fragmentManager: FragmentManager, fragment: Fragment, includeSelf: Boolean = false) {
-        val fragments = getFragments()
-        if (fragment !in mFragmentStack.getFragments()) {
+        val fragments = getFragments(fragmentManager)
+        if (fragment !in fragments) {
             return
         }
         val index = fragments.indexOf(fragment)
@@ -153,16 +175,26 @@ class Fragmentation(var activity: HostActivity) : Serializable {
 
     }
 
-    fun getFragments(): MutableList<Fragment> {
-        return mFragmentStack.getFragments()
+    fun getFragments(fragmentManager: FragmentManager): MutableList<Fragment> {
+        val frgTags = mFragmentStack.getFragments()
+        val frgs = ArrayList<Fragment>(frgTags.size)
+        frgTags.forEach {
+            val frg = fragmentManager.findFragmentByTag(it)
+            frg?.let { frgs.add(it) }
+        }
+        return frgs
     }
 
     fun getStackCount(): Int {
         return mFragmentStack.getStackCount()
     }
 
-    fun getTopFragment(): Fragment? {
-        return mFragmentStack.getTopFragment()
+    fun getTopFragment(fragmentManager: FragmentManager): Fragment? {
+        val frgTags = mFragmentStack.getFragments()
+        if (frgTags.size > 0) {
+            return fragmentManager.findFragmentByTag(frgTags.last())
+        } else {
+            return null
+        }
     }
-
 }

@@ -20,19 +20,20 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             mFragmentation = savedInstanceState.getSerializable(KEY_FRAGMENTATION) as Fragmentation
-            mFragmentation.activity = this
+            mFragmentation.init(this)
         } else {
-            mFragmentation = Fragmentation(this)
+            mFragmentation = Fragmentation()
+            mFragmentation.init(this)
         }
         super.onCreate(savedInstanceState)
     }
 
     override fun startFragment(to: Fragment, launchMode: Int) {
-        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, launchMode, Fragmentation.START_TYPE.ADD)
+        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(supportFragmentManager), to, launchMode, Fragmentation.START_TYPE.ADD)
     }
 
     override fun startFragmentForResult(to: Fragment, requestCode: Int, launchMode: Int) {
-        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(), to, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
+        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(supportFragmentManager), to, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
     }
 
     override fun popFragment() {
@@ -45,7 +46,7 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
 
     override fun onBackPressed() {
-        val top = mFragmentation.getTopFragment()
+        val top = mFragmentation.getTopFragment(supportFragmentManager)
         if (top == null || top !is IKitFragmentAction) {
             return
         }
@@ -63,5 +64,13 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putSerializable(KEY_FRAGMENTATION, mFragmentation)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
     }
 }

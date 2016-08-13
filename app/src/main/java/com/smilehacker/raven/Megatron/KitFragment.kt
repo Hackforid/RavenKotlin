@@ -11,6 +11,10 @@ import com.smilehacker.raven.util.DLog
  */
 abstract class KitFragment : Fragment(), IKitFragmentAction {
 
+    companion object {
+        const val KEY_IS_HIDDEN = "key_is_hidden"
+    }
+
     val mFragmentActor by lazy { KitFragmentActor(this) }
 
     override var fragmentResult: FragmentResult? = mFragmentActor.fragmentResult
@@ -21,10 +25,19 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
         DLog.i("===stack===" + hostActivity.mFragmentation.hashCode())
-        hostActivity.mFragmentation.getFragments().forEach {
+        hostActivity.mFragmentation.getFragments(fragmentManager).forEach {
             DLog.i(it.javaClass.name)
+        }
+        if (savedInstanceState != null) {
+            val isHidden = savedInstanceState.getBoolean(KEY_IS_HIDDEN, false)
+            val ft = fragmentManager.beginTransaction()
+            if (isHidden) {
+                ft.hide(this)
+            } else {
+                ft.show(this)
+            }
+            ft.commit()
         }
     }
 
@@ -96,5 +109,11 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
 
     override fun onInvisible() {
     }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putBoolean(KEY_IS_HIDDEN, isHidden)
+    }
+
 
 }

@@ -9,35 +9,35 @@ import java.util.*
  * Created by zhouquan on 16/6/9.
  */
 class FragmentStack : Serializable {
-    private val mFragmentStack : MutableList<Fragment> = ArrayList()
+    private val mFragmentStack : MutableList<String> = ArrayList()
 
     fun getFragments() = mFragmentStack
 
     fun getStackCount() = mFragmentStack.size
 
-    fun putStandard(fragment : Fragment) {
-        mFragmentStack.add(fragment)
+    fun putStandard(fragmentTag : String) {
+        mFragmentStack.add(fragmentTag)
     }
 
-    fun putSingleTop(fragment: Fragment) : Boolean {
-        if (mFragmentStack.isEmpty() || mFragmentStack.last() != fragment) {
-            mFragmentStack.add(fragment)
+    fun putSingleTop(fragmentTag: String) : Boolean {
+        if (mFragmentStack.isEmpty() || mFragmentStack.last() != fragmentTag) {
+            mFragmentStack.add(fragmentTag)
             return false
         } else {
             return true
         }
     }
 
-    fun putSingleTask(fragment: Fragment, bundle: Bundle? = null) : Boolean {
-        if (mFragmentStack.isEmpty() || fragment !in mFragmentStack) {
-            mFragmentStack.add(fragment)
+    fun putSingleTask(fragmentTag: String, bundle: Bundle? = null) : Boolean {
+        if (mFragmentStack.isEmpty() || fragmentTag !in mFragmentStack) {
+            mFragmentStack.add(fragmentTag)
             return false
         } else {
-            if (fragment == mFragmentStack.last()) {
+            if (fragmentTag == mFragmentStack.last()) {
                 return false
             } else {
-                mFragmentStack.remove(fragment)
-                mFragmentStack.add(fragment)
+                mFragmentStack.remove(fragmentTag)
+                mFragmentStack.add(fragmentTag)
                 return true
             }
         }
@@ -47,31 +47,44 @@ class FragmentStack : Serializable {
         mFragmentStack.removeAt(mFragmentStack.lastIndex)
     }
 
-    fun popTo(fragment: Fragment, includeSelf: Boolean = false) {
-        if (fragment !in mFragmentStack) {
+    fun popTo(fragmentTag: String, includeSelf: Boolean = false) {
+        if (fragmentTag !in mFragmentStack) {
             return
         }
         if (includeSelf) {
-            if (mFragmentStack.indexOf(fragment) > 0) {
-                mFragmentStack.subList(0, mFragmentStack.indexOf(fragment)-1)
+            if (mFragmentStack.indexOf(fragmentTag) > 0) {
+                mFragmentStack.subList(0, mFragmentStack.indexOf(fragmentTag)-1)
             } else {
                 mFragmentStack.clear()
             }
         } else {
-            mFragmentStack.subList(0, mFragmentStack.indexOf(fragment))
+            mFragmentStack.subList(0, mFragmentStack.indexOf(fragmentTag))
         }
     }
 
-    fun remove(fragment: Fragment) {
+    fun remove(fragment: String) {
         mFragmentStack.remove(fragment)
     }
 
-    fun getTopFragment() : Fragment? {
+    fun getTopFragment() : String? {
         if (mFragmentStack.isEmpty()) {
             return null
         } else {
             return mFragmentStack.last()
         }
+    }
+
+    fun getNewFragmentName(fragment : Fragment) : String {
+        val className = fragment.javaClass.name
+        var index = 0
+        for (tag in mFragmentStack.asReversed()) {
+            if (tag.startsWith(className)) {
+                index = tag.substring(className.length).toInt()
+                break
+            }
+        }
+
+        return "$className${index+1}"
     }
 
 }
