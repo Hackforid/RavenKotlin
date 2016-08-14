@@ -109,8 +109,9 @@ class FragmentStack() : Parcelable {
     fun getSingleTaskInstancePos(fragment: Fragment) : Int {
         val className = fragment.javaClass.name
         var index = 0
-        for (i in mFragmentStack.reversed().indices) {
-            val tag = mFragmentStack[i]
+        val reFrgs = mFragmentStack.reversed()
+        for (i in reFrgs.indices) {
+            val tag = reFrgs[i]
             if (tag.startsWith(className)) {
                 return mFragmentStack.size - i - 1
             }

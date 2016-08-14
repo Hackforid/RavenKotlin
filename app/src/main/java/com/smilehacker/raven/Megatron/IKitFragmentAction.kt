@@ -39,10 +39,6 @@ interface IKitFragmentActor : IFragmentAction {
     fun finish()
 
     fun setResult(resultCode: Int, data: Bundle? = null)
-
-    fun setNewBundle(bundle: Bundle?)
-
-    fun getNewBundle() : Bundle?
 }
 
 interface IKitFragmentAction : IKitFragmentActor  {

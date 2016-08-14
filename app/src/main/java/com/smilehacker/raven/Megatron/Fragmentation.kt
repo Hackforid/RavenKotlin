@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.util.createParcel
 import java.util.*
@@ -83,7 +84,7 @@ class Fragmentation : Parcelable {
             LAUNCH_MODE.SINGLE_TOP -> {
                 val topFrg = getTopFragment(fragmentManager) as IKitFragmentAction
                 if (topFrg != null && topFrg.javaClass == to.javaClass) {
-                    topFrg.onNewBundle(to.getNewBundle())
+                    topFrg.onNewBundle(to.arguments)
                 } else {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
                     mFragmentStack.putStandard(fragmentTag)
@@ -97,9 +98,6 @@ class Fragmentation : Parcelable {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
                     mFragmentStack.putStandard(fragmentTag)
                     startStandard(fragmentManager, from, to, fragmentTag, startType, requestCode)
-                } else if (instanceIndex == mFragmentStack.getStackCount() - 1) {
-                    val topFrg = getTopFragment(fragmentManager) as IKitFragmentAction
-                    topFrg.onNewBundle(to.getNewBundle())
                 } else {
                     startSingleTask(fragmentManager, to)
                 }
@@ -111,7 +109,7 @@ class Fragmentation : Parcelable {
     }
 
     private fun startSingleTask(fragmentManager: FragmentManager, to: Fragment) {
-        popTo(fragmentManager, to, true)
+        popTo(fragmentManager, to, false)
     }
 
     private fun startStandard(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
@@ -135,11 +133,10 @@ class Fragmentation : Parcelable {
             }
             if (to.getAnimation() != null) {
                 ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
+            } else {
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             }
             ft.add(mContainerID, to, toTag)
-            if (from.getAnimation() != null) {
-                ft.setCustomAnimations(from.getAnimation()!!.first, from.getAnimation()!!.second)
-            }
             ft.hide(from)
         } else {
             if (to.getAnimation() != null) {
@@ -152,63 +149,106 @@ class Fragmentation : Parcelable {
 
 
     fun finish(fragmentManager: FragmentManager, fragment: Fragment) {
-        val fragments = getFragments(fragmentManager)
-        if (fragment !in fragments || fragments.size <= 1) {
-            return
-        }
-        val index = fragments.indexOf(fragment)
-        if (index == fragments.lastIndex) {
-            val preFrg = fragments[index - 1]
-            handleFragmentResult(fragment, preFrg)
-            val ft = fragmentManager.beginTransaction()
-            ft.show(preFrg)
-            if (fragment is IKitFragmentAction && fragment.getAnimation() != null) {
-                ft.setCustomAnimations(fragment.getAnimation()!!.first, fragment.getAnimation()!!.second)
-            }
-            ft.remove(fragment)
-            ft.commit()
-        } else {
-            if (index > 1) {
-                val preFrg = fragments[index - 1]
-                handleFragmentResult(fragment, preFrg)
-            }
-            fragmentManager.beginTransaction()
-                    .remove(fragment)
-                    .commit()
-        }
-        mFragmentStack.remove(fragment.tag)
+//        val fragments = getFragments(fragmentManager)
+//        if (fragment !in fragments || fragments.size <= 1) {
+//            return
+//        }
+//        val index = fragments.indexOf(fragment)
+//        if (index == fragments.lastIndex) {
+//            val preFrg = fragments[index - 1]
+//            handleFragmentResult(fragment, preFrg)
+//            val ft = fragmentManager.beginTransaction()
+//            ft.show(preFrg)
+//            if (fragment is IKitFragmentAction && fragment.getAnimation() != null) {
+//                ft.setCustomAnimations(fragment.getAnimation()!!.first, fragment.getAnimation()!!.second)
+//            } else {
+//                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+//            }
+//            ft.remove(fragment)
+//            ft.commit()
+//        } else {
+//            if (index > 1) {
+//                val preFrg = fragments[index - 1]
+//                handleFragmentResult(fragment, preFrg)
+//            }
+//            fragmentManager.beginTransaction()
+//                    .remove(fragment)
+//                    .commit()
+//        }
+//        mFragmentStack.remove(fragment.tag)
+        popTo(fragmentManager, fragment, true)
     }
 
     fun popTo(fragmentManager: FragmentManager, fragment: Fragment, includeSelf: Boolean = false) {
-        val fragments = getFragments(fragmentManager)
-        if (fragment !in fragments) {
-            return
+        if (fragment !is IKitFragmentAction) {
+            throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
         }
-        val index = fragments.indexOf(fragment)
-        if (index == fragments.lastIndex && includeSelf) {
-            finish(fragmentManager, fragment)
-        } else {
+        val fragments = getFragments(fragmentManager)
+        if (fragments.isEmpty()) {
             return
         }
 
+        val instanceIndex = mFragmentStack.getSingleTaskInstancePos(fragment)
+        val target : Fragment?
         val top = fragments.last()
-        var target : Fragment? = null
-        if (!includeSelf) {
-            target = fragment
-        } else {
-            if (index == 0) {
-                // 都空了pop你妹
-                return
+        top as IKitFragmentAction
+
+        if (instanceIndex == -1) {
+            return
+        }
+
+        if (instanceIndex == fragments.lastIndex) {
+            if (includeSelf) {
+                //finish(fragmentManager, fragment)
             } else {
-                target = fragments[index-1]
+                top.onNewBundle(fragment.arguments)
+                return
             }
         }
+
+
+        if (!includeSelf) {
+            target = fragments[instanceIndex]
+        } else {
+            if (instanceIndex == 0) {
+                popAll(fragmentManager)
+                return
+            } else {
+                target = fragments[instanceIndex - 1]
+            }
+        }
+        target as IKitFragmentAction
+
         val ft = fragmentManager.beginTransaction()
-        for (i in (fragments.indexOf(target) + 1)..(fragments.indexOf(top))) {
+        for (i in (fragments.indexOf(target) + 1)..(fragments.lastIndex-1)) {
             ft.remove(fragments[i])
         }
+        ft.remove(top)
+        if (top.getAnimation() != null) {
+            ft.setCustomAnimations(top.getAnimation()!!.first, top.getAnimation()!!.second)
+        }
         ft.show(target)
-        ft.commit()
+        ft.commitNow()
+    }
+
+    fun popAll(fragmentManager: FragmentManager) {
+        val fragments = getFragments(fragmentManager)
+        if (fragments.isEmpty()) {
+            return
+        }
+        val top = fragments.last()
+        top as IKitFragmentAction
+        val ft = fragmentManager.beginTransaction()
+        ft.remove(top)
+        if (top.getAnimation() != null) {
+            ft.setCustomAnimations(top.getAnimation()!!.first, top.getAnimation()!!.second)
+        }
+        for (fragment in fragments) {
+            if (fragment != top) {
+                ft.remove(fragment)
+            }
+        }
+        ft.commitNow()
     }
 
     private fun handleFragmentResult(frg: Fragment, preFrg: Fragment) {

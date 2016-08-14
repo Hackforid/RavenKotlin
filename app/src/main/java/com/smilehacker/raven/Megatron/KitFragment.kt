@@ -81,14 +81,6 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
 
     }
 
-    override fun setNewBundle(bundle: Bundle?) {
-        mFragmentActor.setNewBundle(bundle)
-    }
-
-    override fun getNewBundle() : Bundle? {
-        return mFragmentActor.getNewBundle()
-    }
-
     override fun onNewBundle(bundle: Bundle?) {
     }
 

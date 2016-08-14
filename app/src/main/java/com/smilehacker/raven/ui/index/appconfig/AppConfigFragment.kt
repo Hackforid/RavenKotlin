@@ -203,5 +203,8 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
         mEtText.setText(text)
     }
 
+    override fun getAnimation(): Pair<Int, Int>? {
+        return null
+    }
 
 }

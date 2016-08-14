@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment
  */
 class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
 
-    private var mNewBundle : Bundle? = null
-
     override val hostActivity : HostActivity by lazy { fragment.activity as HostActivity }
     private val mFragmentation : Fragmentation by lazy { hostActivity.mFragmentation }
 
@@ -45,14 +43,6 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
 
     override fun setResult(resultCode: Int, data: Bundle?) {
         fragmentResult?.let { it.data = data; it.resultCode = resultCode }
-    }
-
-    override fun setNewBundle(bundle: Bundle?) {
-        mNewBundle = bundle
-    }
-
-    override fun getNewBundle() : Bundle? {
-        return mNewBundle
     }
 
 }
