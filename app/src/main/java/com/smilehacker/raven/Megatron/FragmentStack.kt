@@ -72,12 +72,12 @@ class FragmentStack() : Parcelable {
         }
         if (includeSelf) {
             if (mFragmentStack.indexOf(fragmentTag) > 0) {
-                mFragmentStack.subList(0, mFragmentStack.indexOf(fragmentTag)-1)
+                mFragmentStack = mFragmentStack.subList(0, mFragmentStack.indexOf(fragmentTag))
             } else {
                 mFragmentStack.clear()
             }
         } else {
-            mFragmentStack.subList(0, mFragmentStack.indexOf(fragmentTag))
+            mFragmentStack = mFragmentStack.subList(0, mFragmentStack.indexOf(fragmentTag)+1)
         }
     }
 

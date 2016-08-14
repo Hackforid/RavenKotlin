@@ -199,7 +199,6 @@ class Fragmentation : Parcelable {
 
         if (instanceIndex == fragments.lastIndex) {
             if (includeSelf) {
-                //finish(fragmentManager, fragment)
             } else {
                 top.onNewBundle(fragment.arguments)
                 return
@@ -220,14 +219,15 @@ class Fragmentation : Parcelable {
         target as IKitFragmentAction
 
         val ft = fragmentManager.beginTransaction()
-        for (i in (fragments.indexOf(target) + 1)..(fragments.lastIndex-1)) {
-            ft.remove(fragments[i])
-        }
-        ft.remove(top)
         if (top.getAnimation() != null) {
             ft.setCustomAnimations(top.getAnimation()!!.first, top.getAnimation()!!.second)
         }
+        for (i in (fragments.indexOf(target) + 1)..(fragments.lastIndex)) {
+            ft.remove(fragments[i])
+        }
         ft.show(target)
+        mFragmentStack.popTo(target.tag, false)
+        DLog.i(mFragmentStack.getFragments().toString())
         ft.commitNow()
     }
 
