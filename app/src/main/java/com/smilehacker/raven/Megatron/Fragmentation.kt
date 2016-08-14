@@ -78,25 +78,49 @@ class Fragmentation : Parcelable {
                 }
                 fragmentTag = mFragmentStack.getNewFragmentName(to)
                 mFragmentStack.putStandard(fragmentTag)
+                startStandard(fragmentManager, from, to, fragmentTag, startType, requestCode)
             }
             LAUNCH_MODE.SINGLE_TOP -> {
-                if (fragmentTag.isNullOrEmpty()) {
+                val topFrg = getTopFragment(fragmentManager) as IKitFragmentAction
+                if (topFrg != null && topFrg.javaClass == to.javaClass) {
+                    topFrg.onNewBundle(to.getNewBundle())
+                } else {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
-                }
-                if (mFragmentStack.putSingleTop(fragmentTag!!)) {
-                    to.onNewBundle(to.getNewBundle())
+                    mFragmentStack.putStandard(fragmentTag)
+                    startStandard(fragmentManager, from, to, fragmentTag, startType, requestCode)
                 }
             }
             LAUNCH_MODE.SINGLE_TASK -> {
-                if (fragmentTag.isNullOrEmpty()) {
+
+                val instanceIndex = mFragmentStack.getSingleTaskInstancePos(to)
+                if (instanceIndex == -1) {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
+                    mFragmentStack.putStandard(fragmentTag)
+                    startStandard(fragmentManager, from, to, fragmentTag, startType, requestCode)
+                } else if (instanceIndex == mFragmentStack.getStackCount() - 1) {
+                    val topFrg = getTopFragment(fragmentManager) as IKitFragmentAction
+                    topFrg.onNewBundle(to.getNewBundle())
+                } else {
+                    startSingleTask(fragmentManager, to)
                 }
+
                 if (mFragmentStack.putSingleTask(fragmentTag!!)) {
-                    to.onNewBundle(to.getNewBundle())
                 }
             }
         }
+    }
 
+    private fun startSingleTask(fragmentManager: FragmentManager, to: Fragment) {
+        popTo(fragmentManager, to, true)
+    }
+
+    private fun startStandard(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
+                              toTag: String,
+              startType: Int = START_TYPE.ADD,
+              requestCode: Int = 0) {
+        if (to !is IKitFragmentAction) {
+            throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
+        }
         when (startType) {
             START_TYPE.ADD_WITH_RESULT -> {
                 to.fragmentResult = FragmentResult(requestCode)
@@ -112,7 +136,7 @@ class Fragmentation : Parcelable {
             if (to.getAnimation() != null) {
                 ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
             }
-            ft.add(mContainerID, to, fragmentTag)
+            ft.add(mContainerID, to, toTag)
             if (from.getAnimation() != null) {
                 ft.setCustomAnimations(from.getAnimation()!!.first, from.getAnimation()!!.second)
             }
@@ -121,7 +145,7 @@ class Fragmentation : Parcelable {
             if (to.getAnimation() != null) {
                 ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
             }
-            ft.add(mContainerID, to, fragmentTag)
+            ft.add(mContainerID, to, toTag)
         }
         ft.commit()
     }
