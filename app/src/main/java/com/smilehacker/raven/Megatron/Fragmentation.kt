@@ -223,12 +223,14 @@ class Fragmentation : Parcelable {
             ft.setCustomAnimations(top.getAnimation()!!.first, top.getAnimation()!!.second)
         }
         for (i in (fragments.indexOf(target) + 1)..(fragments.lastIndex)) {
+            if (i > 0) {
+                handleFragmentResult(fragments[i], fragments[i-1])
+            }
             ft.remove(fragments[i])
         }
         ft.show(target)
-        mFragmentStack.popTo(target.tag, false)
-        DLog.i(mFragmentStack.getFragments().toString())
         ft.commitNow()
+        mFragmentStack.popTo(target.tag, false)
     }
 
     fun popAll(fragmentManager: FragmentManager) {
