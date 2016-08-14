@@ -1,15 +1,34 @@
 package com.smilehacker.raven.Megatron
 
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.v4.app.Fragment
-import java.io.Serializable
+import com.smilehacker.raven.util.createParcel
 import java.util.*
 
 /**
  * Created by zhouquan on 16/6/9.
  */
-class FragmentStack : Serializable {
-    private val mFragmentStack : MutableList<String> = ArrayList()
+class FragmentStack() : Parcelable {
+
+    override fun writeToParcel(p0: Parcel?, p1: Int) {
+        p0?.writeStringList(mFragmentStack)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object {
+        @JvmField val CREATOR = createParcel { FragmentStack(it) }
+    }
+
+    constructor(parcel: Parcel) : this() {
+        parcel.readStringList(mFragmentStack)
+    }
+
+    private var mFragmentStack : MutableList<String> = ArrayList()
 
     fun getFragments() = mFragmentStack
 

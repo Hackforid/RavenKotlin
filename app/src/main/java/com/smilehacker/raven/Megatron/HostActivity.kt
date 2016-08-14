@@ -19,7 +19,7 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
-            mFragmentation = savedInstanceState.getSerializable(KEY_FRAGMENTATION) as Fragmentation
+            mFragmentation = savedInstanceState.getParcelable(KEY_FRAGMENTATION)
             mFragmentation.init(this)
         } else {
             mFragmentation = Fragmentation()
@@ -63,7 +63,7 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putSerializable(KEY_FRAGMENTATION, mFragmentation)
+        outState?.putParcelable(KEY_FRAGMENTATION, mFragmentation)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
