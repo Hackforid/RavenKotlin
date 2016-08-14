@@ -21,7 +21,7 @@ class FragmentStack() : Parcelable {
     }
 
     companion object {
-        @JvmField val CREATOR = createParcel { FragmentStack(it) }
+        @JvmField @Suppress("unused") val CREATOR = createParcel { FragmentStack(it) }
     }
 
     constructor(parcel: Parcel) : this() {

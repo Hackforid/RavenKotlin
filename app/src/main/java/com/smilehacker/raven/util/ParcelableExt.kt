@@ -7,8 +7,9 @@ import java.math.BigInteger
 
 /**
  * Created by kleist on 15/11/8.
+ *
+ *
  */
-
 inline fun <reified T : Parcelable> createParcel(crossinline createFromParcel: (Parcel) -> T?): Parcelable.Creator<T> =
         object : Parcelable.Creator<T> {
             override fun createFromParcel(source: Parcel): T? = createFromParcel(source)

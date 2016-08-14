@@ -23,7 +23,7 @@ class Fragmentation : Parcelable {
     }
 
     companion object {
-        @JvmField val CREATOR = createParcel { Fragmentation(it) }
+        @JvmField @Suppress("unused") val CREATOR = createParcel { Fragmentation(it) }
     }
 
     constructor(parcel: Parcel) : this() {
