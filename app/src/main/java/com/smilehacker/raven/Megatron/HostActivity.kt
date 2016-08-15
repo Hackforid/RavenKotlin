@@ -28,22 +28,21 @@ abstract class HostActivity : AppCompatActivity(), IFragmentAction {
         super.onCreate(savedInstanceState)
     }
 
-    override fun startFragment(to: Fragment, launchMode: Int) {
-        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(supportFragmentManager), to, launchMode, Fragmentation.START_TYPE.ADD)
+    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
+        mFragmentation.start(supportFragmentManager, to, bundle, launchMode, Fragmentation.START_TYPE.ADD)
     }
 
-    override fun startFragmentForResult(to: Fragment, requestCode: Int, launchMode: Int) {
-        mFragmentation.start(supportFragmentManager, mFragmentation.getTopFragment(supportFragmentManager), to, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
+    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
+        mFragmentation.start(supportFragmentManager, to, bundle, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
     }
 
     override fun popFragment() {
         onBackPressed()
     }
 
-    override fun popToFragment(fragment: Fragment, includeSelf: Boolean) {
-        mFragmentation.popTo(supportFragmentManager, fragment, includeSelf)
+    override fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
+        mFragmentation.popTo(supportFragmentManager, fragment, bundle, includeSelf)
     }
-
 
     override fun onBackPressed() {
         val top = mFragmentation.getTopFragment(supportFragmentManager)

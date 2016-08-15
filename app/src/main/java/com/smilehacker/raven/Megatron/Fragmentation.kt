@@ -1,10 +1,10 @@
 package com.smilehacker.raven.Megatron
 
+import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.util.createParcel
 import java.util.*
 
@@ -45,11 +45,6 @@ class Fragmentation : Parcelable {
         const val STANDARD = 3
     }
 
-    init {
-        DLog.i("create fragmentation")
-    }
-
-
     private lateinit var mFragmentStack: FragmentStack
 
     private var mContainerID: Int = 0
@@ -58,36 +53,46 @@ class Fragmentation : Parcelable {
         mContainerID = activity.getContainerID()
     }
 
+    inline fun <reified T : Fragment> instanceFragment(bundle: Bundle? = null) : T{
+        val frg = T::class.java.constructors[0].newInstance() as T
+        frg.arguments = bundle
+        return frg
+    }
 
-    fun start(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
+    private fun <T: Fragment> newFragment(clazz: Class<T>, bundle: Bundle? = null) : T{
+        val frg = clazz.constructors[0].newInstance() as T
+        frg.arguments = bundle
+        return frg
+    }
+
+    fun <T : Fragment> start(fragmentManager: FragmentManager, to: Class<T>,
+              bundle: Bundle? = null,
               launchMode: Int = LAUNCH_MODE.STANDARD,
               startType: Int = START_TYPE.ADD,
               requestCode: Int = 0) {
 
-        if (to !is IKitFragmentAction) {
-            throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
+        val fragmentTag : String?
+        val top: Fragment?
+        if (getStackCount() > 0) {
+            top = getTopFragment(fragmentManager)
+        } else {
+            top = null
         }
-
-        var fragmentTag : String? = to.tag
-        DLog.i("frag tag = " + fragmentTag)
 
         when (launchMode) {
             LAUNCH_MODE.STANDARD -> {
-                if (!fragmentTag.isNullOrEmpty()) {
-                    throw IllegalArgumentException("new fragment should not has tag")
-                }
                 fragmentTag = mFragmentStack.getNewFragmentName(to)
                 mFragmentStack.putStandard(fragmentTag)
-                startStandard(fragmentManager, from, to, fragmentTag, startType, requestCode)
+                startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
             }
             LAUNCH_MODE.SINGLE_TOP -> {
-                val topFrg = getTopFragment(fragmentManager) as IKitFragmentAction
-                if (topFrg != null && topFrg.javaClass == to.javaClass) {
-                    topFrg.onNewBundle(to.arguments)
+                if (top != null && top.javaClass == to) {
+                    top as IKitFragmentAction
+                    top.onNewBundle(bundle)
                 } else {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
                     mFragmentStack.putStandard(fragmentTag)
-                    startStandard(fragmentManager, from, to, fragmentTag, startType, requestCode)
+                    startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
                 }
             }
             LAUNCH_MODE.SINGLE_TASK -> {
@@ -96,16 +101,16 @@ class Fragmentation : Parcelable {
                 if (instanceIndex == -1) {
                     fragmentTag = mFragmentStack.getNewFragmentName(to)
                     mFragmentStack.putStandard(fragmentTag)
-                    startStandard(fragmentManager, from, to, fragmentTag, startType, requestCode)
+                    startStandard(fragmentManager, top, newFragment(to, bundle), fragmentTag, startType, requestCode)
                 } else {
-                    startSingleTask(fragmentManager, to)
+                    startSingleTask(fragmentManager, to, bundle)
                 }
             }
         }
     }
 
-    private fun startSingleTask(fragmentManager: FragmentManager, to: Fragment) {
-        popTo(fragmentManager, to, false)
+    private fun <T : Fragment>  startSingleTask(fragmentManager: FragmentManager, to: Class<T>, bundle: Bundle?) {
+        popTo(fragmentManager, to, bundle, false)
     }
 
     private fun startStandard(fragmentManager: FragmentManager, from: Fragment?, to: Fragment,
@@ -137,19 +142,16 @@ class Fragmentation : Parcelable {
 
 
     fun finish(fragmentManager: FragmentManager, fragment: Fragment) {
-        popTo(fragmentManager, fragment, true)
+        popTo(fragmentManager, fragment.javaClass, null, true)
     }
 
-    fun popTo(fragmentManager: FragmentManager, fragment: Fragment, includeSelf: Boolean = false) {
-        if (fragment !is IKitFragmentAction) {
-            throw IllegalArgumentException("to fragment should implement IKitFragmentAction")
-        }
+    fun <T : Fragment> popTo(fragmentManager: FragmentManager, fragmentClass: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false) {
         val fragments = getFragments(fragmentManager)
         if (fragments.isEmpty()) {
             return
         }
 
-        val instanceIndex = mFragmentStack.getSingleTaskInstancePos(fragment)
+        val instanceIndex = mFragmentStack.getSingleTaskInstancePos(fragmentClass)
         val target : Fragment?
         val top = fragments.last()
         top as IKitFragmentAction
@@ -161,7 +163,7 @@ class Fragmentation : Parcelable {
         if (instanceIndex == fragments.lastIndex) {
             if (includeSelf) {
             } else {
-                top.onNewBundle(fragment.arguments)
+                top.onNewBundle(bundle)
                 return
             }
         }
@@ -199,19 +201,17 @@ class Fragmentation : Parcelable {
         if (fragments.isEmpty()) {
             return
         }
+        val ft = fragmentManager.beginTransaction()
         val top = fragments.last()
         top as IKitFragmentAction
-        val ft = fragmentManager.beginTransaction()
-        ft.remove(top)
         if (top.getAnimation() != null) {
             ft.setCustomAnimations(top.getAnimation()!!.first, top.getAnimation()!!.second)
         }
         for (fragment in fragments) {
-            if (fragment != top) {
-                ft.remove(fragment)
-            }
+            ft.remove(fragment)
         }
         ft.commitNow()
+        mFragmentStack.popAll()
     }
 
     private fun handleFragmentResult(frg: Fragment, preFrg: Fragment) {

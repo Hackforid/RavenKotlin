@@ -25,10 +25,6 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DLog.i("===stack===" + hostActivity.mFragmentation.hashCode())
-        hostActivity.mFragmentation.getFragments(fragmentManager).forEach {
-            DLog.i(it.javaClass.name)
-        }
         if (savedInstanceState != null) {
             val isHidden = savedInstanceState.getBoolean(KEY_IS_HIDDEN, false)
             val ft = fragmentManager.beginTransaction()
@@ -55,12 +51,13 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         onVisible()
     }
 
-    override fun startFragment(to: Fragment, launchMode: Int) {
-        mFragmentActor.startFragment(to, launchMode)
+    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
+        mFragmentActor.startFragment(to, bundle, launchMode)
     }
 
-    override fun startFragmentForResult(to: Fragment, requestCode: Int, launchMode: Int) {
-        mFragmentActor.startFragmentForResult(to, requestCode, launchMode)
+
+    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
+        mFragmentActor.startFragmentForResult(to, bundle, requestCode, launchMode)
     }
 
 
@@ -68,8 +65,8 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         mFragmentActor.popFragment()
     }
 
-    override fun popToFragment(fragment: Fragment, includeSelf: Boolean) {
-        mFragmentActor.popToFragment(fragment, includeSelf)
+    override fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
+        mFragmentActor.popToFragment(fragment, bundle, includeSelf)
     }
 
     override fun finish() {
@@ -97,6 +94,7 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
     }
 
     override fun onVisible() {
+        logFragmentStack()
     }
 
     override fun onInvisible() {
@@ -107,5 +105,12 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         outState?.putBoolean(KEY_IS_HIDDEN, isHidden)
     }
 
+    private fun logFragmentStack() {
+        DLog.i("===stack ${hostActivity.mFragmentation.hashCode()} ===")
+        hostActivity.mFragmentation.getFragments(fragmentManager).forEach {
+            DLog.d(it.javaClass.name + ":" + it.tag)
+        }
+        DLog.i("===end===")
+    }
 
 }

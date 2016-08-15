@@ -19,6 +19,6 @@ class MainActivity : HostActivity() {
     }
 
     private fun init() {
-        startFragment(IndexFragment())
+        startFragment(IndexFragment::class.java)
     }
 }

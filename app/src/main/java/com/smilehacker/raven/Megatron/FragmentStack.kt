@@ -56,6 +56,10 @@ class FragmentStack() : Parcelable {
         }
     }
 
+    fun popAll() {
+        mFragmentStack.clear()
+    }
+
     fun remove(fragment: String) {
         mFragmentStack.remove(fragment)
     }
@@ -68,8 +72,8 @@ class FragmentStack() : Parcelable {
         }
     }
 
-    fun getNewFragmentName(fragment : Fragment) : String {
-        val className = fragment.javaClass.name
+    fun <T : Fragment> getNewFragmentName(clazz: Class<T>) : String {
+        val className =  clazz.name
         var index = 0
         for (tag in mFragmentStack.asReversed()) {
             if (tag.startsWith(className)) {
@@ -81,9 +85,12 @@ class FragmentStack() : Parcelable {
         return "$className${index+1}"
     }
 
-    fun getSingleTaskInstancePos(fragment: Fragment) : Int {
-        val className = fragment.javaClass.name
-        var index = 0
+    fun getNewFragmentName(fragment : Fragment) : String {
+        return getNewFragmentName(fragment.javaClass)
+    }
+
+    fun <T : Fragment> getSingleTaskInstancePos(fragmentClass: Class<T>) : Int {
+        val className = fragmentClass.name
         val reFrgs = mFragmentStack.reversed()
         for (i in reFrgs.indices) {
             val tag = reFrgs[i]
@@ -92,6 +99,10 @@ class FragmentStack() : Parcelable {
             }
         }
         return -1
+    }
+
+    fun getSingleTaskInstancePos(fragment: Fragment) : Int {
+        return getSingleTaskInstancePos(fragment.javaClass)
     }
 
 }

@@ -19,12 +19,12 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
         }
     }
 
-    override fun startFragment(to: Fragment, launchMode: Int) {
-        mFragmentation.start(fragment.fragmentManager, fragment, to, launchMode)
+    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
+        mFragmentation.start(fragment.fragmentManager, to, bundle, launchMode)
     }
 
-    override fun startFragmentForResult(to: Fragment, requestCode: Int, launchMode: Int) {
-        mFragmentation.start(fragment.fragmentManager, fragment, to, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
+    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
+        mFragmentation.start(fragment.fragmentManager, to, bundle, launchMode, Fragmentation.START_TYPE.ADD_WITH_RESULT, requestCode)
     }
 
 
@@ -32,15 +32,13 @@ class KitFragmentActor(val fragment: Fragment) : IKitFragmentActor {
         finish()
     }
 
-    override fun popToFragment(fragment: Fragment, includeSelf: Boolean) {
-        mFragmentation.popTo(fragment.fragmentManager, fragment, includeSelf)
+    override fun <T : Fragment> popToFragment(to: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
+        mFragmentation.popTo(fragment.fragmentManager, to, bundle, includeSelf)
     }
 
     override fun finish() {
         mFragmentation.finish(fragment.fragmentManager, fragment)
     }
-
-
     override fun setResult(resultCode: Int, data: Bundle?) {
         fragmentResult?.let { it.data = data; it.resultCode = resultCode }
     }

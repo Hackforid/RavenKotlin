@@ -185,7 +185,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.action_settings -> {
-                startFragment(ConfigFragment())
+                startFragment(ConfigFragment::class.java)
                 return true
             }
         }
@@ -276,12 +276,9 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
 
     override fun onOpenAppConfig(app: AppInfo) {
-        val frg = AppConfigFragment()
         val bundle = Bundle()
         bundle.putString(Constants.KEY_PACKAGE_NAME, app.packageName)
-        DLog.i("set args")
-        frg.arguments = bundle
-        startFragment(frg)
+        startFragment(AppConfigFragment::class.java, bundle)
     }
 
     override fun onBackPress(): Boolean {

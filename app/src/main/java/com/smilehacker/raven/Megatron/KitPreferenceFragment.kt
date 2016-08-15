@@ -32,12 +32,13 @@ abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAc
     }
 
 
-    override fun startFragment(to: Fragment, launchMode: Int) {
-        mFragmentActor.startFragment(to, launchMode)
+    override fun <T : Fragment> startFragment(to: Class<T>, bundle: Bundle?, launchMode: Int) {
+        mFragmentActor.startFragment(to, bundle, launchMode)
     }
 
-    override fun startFragmentForResult(to: Fragment, requestCode: Int, launchMode: Int) {
-        mFragmentActor.startFragmentForResult(to, requestCode, launchMode)
+
+    override fun <T : Fragment> startFragmentForResult(to: Class<T>, bundle: Bundle?, requestCode: Int, launchMode: Int) {
+        mFragmentActor.startFragmentForResult(to, bundle, requestCode, launchMode)
     }
 
 
@@ -45,8 +46,8 @@ abstract class KitPreferenceFragment: PreferenceFragmentCompat(), IKitFragmentAc
         mFragmentActor.popFragment()
     }
 
-    override fun popToFragment(fragment: Fragment, includeSelf: Boolean) {
-        mFragmentActor.popToFragment(fragment, includeSelf)
+    override fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle?, includeSelf: Boolean) {
+        mFragmentActor.popToFragment(fragment, bundle, includeSelf)
     }
 
     override fun finish() {

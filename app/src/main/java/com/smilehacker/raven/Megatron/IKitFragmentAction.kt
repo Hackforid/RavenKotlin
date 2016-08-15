@@ -20,14 +20,16 @@ interface IFragmentAction {
 
     }
 
-    fun startFragment(to : Fragment, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
+    fun <T : Fragment> startFragment(to : Class<T>, bundle: Bundle? = null,
+                                     launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
 
 
-    fun startFragmentForResult(to : Fragment, requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
+    fun <T : Fragment> startFragmentForResult(to : Class<T>, bundle: Bundle? = null,
+                                              requestCode: Int, launchMode : Int = FragmentController.FRAGMENT.LAUNCH_MODE.STANDARD)
 
     fun popFragment()
 
-    fun popToFragment(fragment: Fragment, includeSelf: Boolean = false)
+    fun <T : Fragment> popToFragment(fragment: Class<T>, bundle: Bundle? = null, includeSelf: Boolean = false)
 }
 
 interface IKitFragmentActor : IFragmentAction {
