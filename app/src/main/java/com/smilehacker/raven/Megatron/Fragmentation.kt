@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
 import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.util.createParcel
 import java.util.*
@@ -101,9 +100,6 @@ class Fragmentation : Parcelable {
                 } else {
                     startSingleTask(fragmentManager, to)
                 }
-
-                if (mFragmentStack.putSingleTask(fragmentTag!!)) {
-                }
             }
         }
     }
@@ -126,56 +122,21 @@ class Fragmentation : Parcelable {
         }
 
         val ft = fragmentManager.beginTransaction()
+        if (to.getAnimation() != null) {
+            ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
+        }
 
         if (from != null) {
-            if (from !is IKitFragmentAction) {
-                throw IllegalArgumentException("from fragment should implement IKitFragmentAction")
-            }
-            if (to.getAnimation() != null) {
-                ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
-            } else {
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            }
             ft.add(mContainerID, to, toTag)
             ft.hide(from)
         } else {
-            if (to.getAnimation() != null) {
-                ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
-            }
             ft.add(mContainerID, to, toTag)
         }
-        ft.commit()
+        ft.commitNow()
     }
 
 
     fun finish(fragmentManager: FragmentManager, fragment: Fragment) {
-//        val fragments = getFragments(fragmentManager)
-//        if (fragment !in fragments || fragments.size <= 1) {
-//            return
-//        }
-//        val index = fragments.indexOf(fragment)
-//        if (index == fragments.lastIndex) {
-//            val preFrg = fragments[index - 1]
-//            handleFragmentResult(fragment, preFrg)
-//            val ft = fragmentManager.beginTransaction()
-//            ft.show(preFrg)
-//            if (fragment is IKitFragmentAction && fragment.getAnimation() != null) {
-//                ft.setCustomAnimations(fragment.getAnimation()!!.first, fragment.getAnimation()!!.second)
-//            } else {
-//                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-//            }
-//            ft.remove(fragment)
-//            ft.commit()
-//        } else {
-//            if (index > 1) {
-//                val preFrg = fragments[index - 1]
-//                handleFragmentResult(fragment, preFrg)
-//            }
-//            fragmentManager.beginTransaction()
-//                    .remove(fragment)
-//                    .commit()
-//        }
-//        mFragmentStack.remove(fragment.tag)
         popTo(fragmentManager, fragment, true)
     }
 

@@ -1,6 +1,5 @@
 package com.smilehacker.raven.Megatron
 
-import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.Fragment
@@ -36,30 +35,6 @@ class FragmentStack() : Parcelable {
 
     fun putStandard(fragmentTag : String) {
         mFragmentStack.add(fragmentTag)
-    }
-
-    fun putSingleTop(fragmentTag: String) : Boolean {
-        if (mFragmentStack.isEmpty() || mFragmentStack.last() != fragmentTag) {
-            mFragmentStack.add(fragmentTag)
-            return false
-        } else {
-            return true
-        }
-    }
-
-    fun putSingleTask(fragmentTag: String, bundle: Bundle? = null) : Boolean {
-        if (mFragmentStack.isEmpty() || fragmentTag !in mFragmentStack) {
-            mFragmentStack.add(fragmentTag)
-            return false
-        } else {
-            if (fragmentTag == mFragmentStack.last()) {
-                return false
-            } else {
-                mFragmentStack.remove(fragmentTag)
-                mFragmentStack.add(fragmentTag)
-                return true
-            }
-        }
     }
 
     fun pop() {
