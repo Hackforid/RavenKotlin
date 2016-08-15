@@ -14,9 +14,8 @@
             android:id="@+id/toolbar"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:background="#2196F3"
+            android:background="@drawable/bg_index_toolbar"
             app:titleTextColor="@color/white"
-            android:elevation="3dp"
             />
 
         <RelativeLayout
