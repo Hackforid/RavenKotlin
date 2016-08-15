@@ -82,6 +82,11 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
         activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
+    override fun onInvisible() {
+        super.onInvisible()
+        DLog.i("onInVisible")
+    }
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI()

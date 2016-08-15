@@ -25,3 +25,4 @@ fun isChineseByBlock(c: Char): Boolean {
 }
 
 public inline fun <T> Array<out T>?.isNullOrEmpty() : Boolean = this == null || this.isEmpty()
+

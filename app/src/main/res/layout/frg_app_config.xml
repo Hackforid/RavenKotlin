@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="请输入语音格式"
-                android:textSize="@dimen/common_textsize_t5"
+                android:textSize="@dimen/common_textsize_t4"
                 android:textColor="@color/white"
                 android:textColorHint="@color/text_level3_color"
                 android:minHeight="40dp"
@@ -51,6 +51,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:textCursorDrawable="@null"
+                android:paddingBottom="20dp"
                 />
         </RelativeLayout>
 
@@ -60,7 +61,7 @@
             android:orientation="horizontal"
             android:layout_below="@id/vg_text"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="37dp"
+            android:layout_marginLeft="35dp"
             >
             <ImageView
                 android:id="@+id/tag_name"
@@ -87,6 +88,7 @@
 
     </LinearLayout>
 
+
     <TextView
         android:id="@+id/tv_app_name"
         android:layout_width="wrap_content"
@@ -99,30 +101,46 @@
         android:layout_marginBottom="120dp"
         />
 
-    <TextView
-        android:id="@+id/btn_default"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:textColor="@color/white"
-        android:text="默认"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="24dp"
-        android:layout_marginBottom="24dp"
-        />
+        >
+        <TextView
+            android:id="@+id/btn_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/common_textsize_t3"
+            android:textColor="@color/white"
+            android:text="默认"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_confirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        app:backgroundTint="#FFA726"
-        android:src="@drawable/ic_done_white_24dp"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        android:layout_margin="18dp"
-        />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            app:backgroundTint="#FFA726"
+            android:src="@drawable/ic_done_white_24dp"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="这个页面是干嘛的?"
+            android:textColor="@color/white"
+            android:textSize="@dimen/common_textsize_t1"
+            />
+    </RelativeLayout>
+
 
 
 </RelativeLayout>

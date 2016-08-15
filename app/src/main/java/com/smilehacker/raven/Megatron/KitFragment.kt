@@ -105,6 +105,7 @@ abstract class KitFragment : Fragment(), IKitFragmentAction {
         outState?.putBoolean(KEY_IS_HIDDEN, isHidden)
     }
 
+
     private fun logFragmentStack() {
         DLog.i("===stack ${hostActivity.mFragmentation.hashCode()} ===")
         hostActivity.mFragmentation.getFragments(fragmentManager).forEach {

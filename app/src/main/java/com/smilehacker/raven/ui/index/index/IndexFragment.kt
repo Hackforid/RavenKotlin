@@ -11,7 +11,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
 import android.view.*
-import android.widget.RelativeLayout
+import android.widget.FrameLayout
 import butterknife.bindView
 import com.smilehacker.raven.Constants
 import com.smilehacker.raven.R
@@ -22,6 +22,7 @@ import com.smilehacker.raven.ui.index.appconfig.AppConfigFragment
 import com.smilehacker.raven.ui.index.preference.ConfigFragment
 import com.smilehacker.raven.util.DLog
 import com.smilehacker.raven.util.ViewUtils
+import com.smilehacker.raven.util.makeSnackbar
 import com.smilehacker.raven.widget.IndexSideBar
 
 /**
@@ -31,7 +32,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
     private val mRvApps by bindView<RecyclerView>(R.id.rv_apps)
     private val mToolbar by bindView<Toolbar>(R.id.toolbar)
-    private val mRoot by bindView<RelativeLayout>(R.id.root)
+    private val mRoot by bindView<FrameLayout>(R.id.root)
     private val mSwitch by bindView<SwitchCompat>(R.id.v_switch)
     private val mIndexSider by bindView<IndexSideBar>(R.id.indexsider)
 
@@ -45,8 +46,8 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DLog.i("")
         setHasOptionsMenu(true)
+        DLog.i("")
 
     }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -78,7 +79,13 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     override fun onVisible() {
         super.onVisible()
         DLog.i("onVisible")
-        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        initToolbar()
+        //activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+    }
+
+    override fun onInvisible() {
+        super.onInvisible()
+        DLog.i("onInVisible")
     }
 
     override fun createPresenter(): IndexPresenter {
@@ -163,6 +170,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        DLog.i("")
         inflater?.inflate(R.menu.main, menu)
 
         mSearchView = menu!!.findItem(R.id.action_search).actionView as SearchView
@@ -180,6 +188,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
             }
 
         })
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -216,13 +225,11 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
     override fun showSetNotificationSnackbar() {
-        if (view == null) {
-            return
-        }
-        val snackbar = Snackbar.make(view!!, "Raven需要您开启通知服务以正常运行,请手动开启.", Snackbar.LENGTH_INDEFINITE)
+        val snackbar = makeSnackbar(mRoot, "Raven需要您开启通知服务以正常运行,请手动开启.", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("设置", {view -> gotoSetNotificationService(); snackbar.dismiss()})
         snackbar.show()
     }
+
 
     private fun gotoSetNotificationService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -272,7 +279,7 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
     override fun showSetTTSSnackbar(msg: String) {
-        val snackbar = Snackbar.make(mRoot, "文字转语音服务不可用,请手动设置", Snackbar.LENGTH_INDEFINITE)
+        val snackbar = makeSnackbar(mRoot, "文字转语音服务不可用,请手动设置", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("查看", {view -> showSetTTSDialog(msg); snackbar.dismiss()})
         snackbar.show()
     }
