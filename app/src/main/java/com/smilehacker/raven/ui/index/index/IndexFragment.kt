@@ -216,7 +216,10 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
     override fun showSetNotificationSnackbar() {
-        val snackbar = Snackbar.make(mRvApps, "Raven需要您开启通知服务以正常运行,请手动开启.", Snackbar.LENGTH_INDEFINITE)
+        if (view == null) {
+            return
+        }
+        val snackbar = Snackbar.make(view!!, "Raven需要您开启通知服务以正常运行,请手动开启.", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("设置", {view -> gotoSetNotificationService(); snackbar.dismiss()})
         snackbar.show()
     }
