@@ -52,7 +52,9 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
         view ->
         val app = view.getTag(R.string.tag_key_app)
         if (app != null) {
-            mAppCallback.onOpenAppConfig(app as AppInfo)
+            val x = (view.left + view.right) / 2
+            val y = (view.top + view.bottom) / 2
+            mAppCallback.onOpenAppConfig(app as AppInfo, x, y)
         }
     }
 
@@ -151,6 +153,6 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
 
     interface AppCallback {
         fun onAppEnableChange(packageName: String, enable: Boolean)
-        fun onOpenAppConfig(app: AppInfo)
+        fun onOpenAppConfig(app: AppInfo, x: Int, y: Int)
     }
 }

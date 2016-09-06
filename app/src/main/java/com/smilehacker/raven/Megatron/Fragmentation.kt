@@ -6,6 +6,7 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.smilehacker.raven.util.createParcel
+import com.smilehacker.raven.util.nullOr
 import java.util.*
 
 /**
@@ -127,9 +128,7 @@ class Fragmentation : Parcelable {
         }
 
         val ft = fragmentManager.beginTransaction()
-        if (to.getAnimation() != null) {
-            ft.setCustomAnimations(to.getAnimation()!!.first, to.getAnimation()!!.second)
-        }
+        ft.setCustomAnimations(to.getAnimation()?.first.nullOr(0), if (from !is IKitFragmentAction) 0 else from?.getAnimation()?.second.nullOr(0))
 
         if (from != null) {
             ft.add(mContainerID, to, toTag)

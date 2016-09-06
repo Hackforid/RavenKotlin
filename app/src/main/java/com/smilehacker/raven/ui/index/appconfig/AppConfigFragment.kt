@@ -1,6 +1,8 @@
 package com.smilehacker.raven.ui.index.appconfig
 
+import android.annotation.TargetApi
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.Toolbar
@@ -9,12 +11,11 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ImageSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
+import android.view.animation.AccelerateInterpolator
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import butterknife.bindView
 import com.smilehacker.raven.Constants
@@ -23,6 +24,7 @@ import com.smilehacker.raven.kit.VoiceMaker
 import com.smilehacker.raven.model.AppInfo
 import com.smilehacker.raven.mvp.MVPFragment
 import com.smilehacker.raven.util.DLog
+import com.smilehacker.raven.util.nullOr
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.support.v4.dip
 import org.jetbrains.anko.support.v4.toast
@@ -41,6 +43,7 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
     val mTagTitle by bindView<ImageView>(R.id.tag_title)
     val mTagMsg by bindView<ImageView>(R.id.tag_msg)
     val mTvAppName by bindView<TextView>(R.id.tv_app_name)
+    val mContainer by bindView<RelativeLayout>(R.id.container)
 
     val mSymbols by lazy { presenter.getVoiceSymbols() }
 
@@ -90,6 +93,9 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI()
+        mContainer.post {
+            doStartAnim()
+        }
     }
 
     private fun initUI() {
@@ -137,7 +143,22 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
 
         mTvAppName.text = "${mAppInfo.appName}消息语音定制"
 
+        mContainer.visibility = View.INVISIBLE
         initToolbar()
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun doStartAnim() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return
+        }
+        mContainer.visibility = View.VISIBLE
+        val x = arguments?.getInt(Constants.KEY_X, 0).nullOr(mContainer.width / 2)
+        val y = arguments?.getInt(Constants.KEY_Y, 0).nullOr(mContainer.height / 2)
+        val anim = ViewAnimationUtils.createCircularReveal(mContainer, x, y, 0f, Math.hypot((mContainer.width / 2).toDouble(), (mContainer.height / 2).toDouble()).toFloat())
+        anim.duration = 200
+        anim.interpolator = AccelerateInterpolator()
+        anim.start()
     }
 
     private fun initToolbar() {
@@ -208,7 +229,7 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
         mEtText.setText(text)
     }
 
-    override fun getAnimation(): Pair<Int, Int>? {
+    override fun getAnimation(): kotlin.Pair<Int, Int>? {
         return null
     }
 

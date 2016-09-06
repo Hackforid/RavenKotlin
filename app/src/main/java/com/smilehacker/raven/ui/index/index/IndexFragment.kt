@@ -285,14 +285,20 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
     }
 
 
-    override fun onOpenAppConfig(app: AppInfo) {
+    override fun onOpenAppConfig(app: AppInfo, x: Int, y: Int) {
         val bundle = Bundle()
         bundle.putString(Constants.KEY_PACKAGE_NAME, app.packageName)
+        bundle.putInt(Constants.KEY_X, x)
+        bundle.putInt(Constants.KEY_Y, y)
         startFragment(AppConfigFragment::class.java, bundle)
     }
 
     override fun onBackPress(): Boolean {
         mSearchView.onActionViewCollapsed()
         return super.onBackPress()
+    }
+
+    override fun getAnimation(): Pair<Int, Int>? {
+        return Pair(0, R.anim.index_circle_anim_out)
     }
 }

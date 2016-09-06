@@ -5,4 +5,6 @@ package com.smilehacker.raven
  */
 object Constants {
     const val KEY_PACKAGE_NAME = "key_package_name"
+    const val KEY_X = "key_x"
+    const val KEY_Y = "key_y"
 }
