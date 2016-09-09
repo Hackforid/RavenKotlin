@@ -106,21 +106,20 @@ class AppConfigFragment : MVPFragment<AppConfigPresenter, AppConfigViewer>(), Ap
         mTagMsg.setOnClickListener(mOnSymbolClickListener)
         mTagMsg.setTag(R.string.tag_key_symbol, mSymbols[1])
 
-        mEtText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
+        mEtText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
             }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val cursorStart = mEtText.selectionStart
                 mEtText.removeTextChangedListener(this)
                 mEtText.setText(replaceSymbolByImage(mEtText.text.toString()))
                 mEtText.setSelection(cursorStart)
                 mEtText.addTextChangedListener(this)
             }
-
         })
 
         mEtText.background.mutate().setColorFilter(resources.getColor(R.color.white), PorterDuff.Mode.SRC_ATOP)

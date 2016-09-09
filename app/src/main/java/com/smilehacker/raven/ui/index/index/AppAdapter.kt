@@ -52,8 +52,10 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
         view ->
         val app = view.getTag(R.string.tag_key_app)
         if (app != null) {
-            val x = (view.left + view.right) / 2
-            val y = (view.top + view.bottom) / 2
+            val pos = IntArray(2)
+            view.getLocationOnScreen(pos)
+            val x = (pos[0] + view.right) / 2
+            val y = (pos[1] + view.bottom) / 2
             mAppCallback.onOpenAppConfig(app as AppInfo, x, y)
         }
     }
@@ -128,7 +130,7 @@ class AppAdapter(val ctx : Context, val mAppCallback : AppCallback) : RecyclerVi
         return mApps.size
     }
 
-    public fun getPositionByFirstLetter(letter: Char) : Int {
+    fun getPositionByFirstLetter(letter: Char) : Int {
         for (app in mApps) {
             if (app.sortName.first().toLowerCase() == letter.toLowerCase() && !app.enable) {
                 return mApps.indexOf(app)
