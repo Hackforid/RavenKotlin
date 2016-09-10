@@ -16,8 +16,9 @@
             android:id="@+id/toolbar"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:background="#fff"
-            app:titleTextColor="#ddd"
+            android:background="#64B5F6"
+            app:titleTextColor="#fff"
+            app:theme="@style/IndexToolbarStyle"
             />
 
         <RelativeLayout
@@ -25,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_below="@id/toolbar"
-            android:background="#fff"
+            android:background="#64B5F6"
             >
 
             <android.support.v7.widget.SwitchCompat
