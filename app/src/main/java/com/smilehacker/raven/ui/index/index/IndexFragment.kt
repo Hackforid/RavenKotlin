@@ -98,8 +98,8 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
 
     private fun initView() {
         val columnCount = 2
-        val spaceOut = ViewUtils.dpToPx(12)
-        val spaceInner = ViewUtils.dpToPx(4)
+        val spaceOut = ViewUtils.dpToPx(16)
+        val spaceInner = ViewUtils.dpToPx(8)
         val layoutManager = GridLayoutManager(context, columnCount, GridLayoutManager.VERTICAL, false)
         mRvApps.layoutManager = layoutManager
         mRvApps.adapter = mAppAdapter

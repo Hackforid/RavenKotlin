@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#f8f8f8"
+    >
 
     <RelativeLayout
         android:orientation="vertical"
@@ -14,21 +16,17 @@
             android:id="@+id/toolbar"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:background="@drawable/bg_index_toolbar"
-            app:titleTextColor="@color/white"
+            android:background="#fff"
+            app:titleTextColor="#ddd"
             />
 
         <RelativeLayout
-            android:id="@+id/vg_bottom"
+            android:id="@+id/vg_controller"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@id/toolbar"
+            android:background="#fff"
             >
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/line"
-                />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/v_switch"
@@ -38,15 +36,20 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
                 />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line"
+                android:layout_alignParentBottom="true"
+                />
 
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_apps"
-            android:layout_below="@id/toolbar"
+            android:layout_below="@id/vg_controller"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/vg_bottom"
             android:paddingRight="5dp"
             >
         </android.support.v7.widget.RecyclerView>
@@ -55,8 +58,7 @@
             android:id="@+id/indexsider"
             android:layout_width="15dp"
             android:layout_height="match_parent"
-            android:layout_above="@id/vg_bottom"
-            android:layout_below="@id/toolbar"
+            android:layout_below="@id/vg_controller"
             android:layout_alignParentRight="true"
             />
     </RelativeLayout>
