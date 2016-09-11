@@ -2,7 +2,6 @@ package com.smilehacker.raven.ui.index.index
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -100,37 +99,9 @@ class IndexFragment : MVPFragment<IndexPresenter, IndexViewer>(), IndexViewer, A
         val columnCount = 2
         val spaceOut = ViewUtils.dpToPx(16)
         val spaceInner = ViewUtils.dpToPx(8)
-        val layoutManager = GridLayoutManager(context, columnCount, GridLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         mRvApps.layoutManager = layoutManager
         mRvApps.adapter = mAppAdapter
-
-        mRvApps.addItemDecoration(object : RecyclerView.ItemDecoration() {
-
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
-                super.getItemOffsets(outRect, view, parent, state)
-                val pos = parent.getChildAdapterPosition(view)
-                val total = parent.adapter.itemCount
-                if (pos % columnCount == 0) {
-                    outRect.left = spaceOut
-                    outRect.right = spaceInner
-                } else {
-                    outRect.left = spaceInner
-                    outRect.right = spaceOut
-                }
-
-                if (pos < columnCount) {
-                    outRect.top = spaceOut
-                    outRect.bottom = spaceInner
-                } else if (pos >= total - columnCount) {
-                    outRect.top = spaceInner
-                    outRect.bottom = spaceOut
-                } else {
-                    outRect.top = spaceInner
-                    outRect.bottom = spaceInner
-                }
-
-            }
-        })
 
         mRvApps.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
